@@ -4,7 +4,6 @@
 <%@include file="/component/head.jsp" %>
 <body class="easyui-layout" style="border:none;padding: 1px;margin: 1px;">
 <div data-options="region:'center'" fit="true" style="border:none;padding: 1px;margin: 1px;">
-
     <s:hidden name="idField" id="idField"/>
     <s:hidden name="ids" id="ids"/>
     <s:hidden name="actionType" id="actionType"/>
@@ -19,6 +18,9 @@
             <a href="#" onclick="del();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
             <a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导出</a>
             <a href="#" onclick="test();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">测试</a>
+            <a href="#" onclick="showDefinePanel();" class="easyui-linkbutton" iconCls="icon-tip" plain="true">
+                <span id="definePanelControl">显示自定义面板</span>
+            </a>
         </div>
         <div style="padding-left: 5px;">
             <s:iterator value="queryFields" id="field" status="st">
@@ -44,6 +46,14 @@
                 <a href="#" onclick="loadData()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
             </s:if>
         </div>
+        <div id="definePanel" style="display: none;padding: 1px;background-color: white">
+            <fieldset>
+                <legend>要显示的字段</legend>
+                <s:iterator value="allFields" id="field" status="st">
+                    <input type="checkbox" id="show_${field.name}" onclick="showDefineColumn()">${field.zh_name}
+                </s:iterator>
+            </fieldset>
+        </div>
     </div>
 
     <table id="dg" class="easyui-datagrid" style="height: auto;border: 1px;" title="" data-options="
@@ -57,20 +67,28 @@
         <thead>
         <tr>
             <th data-options="field:'ck',checkbox:true"></th>
-            <th field="${idField}" width="0" hidden="true"></th>
+            <th sortable="true" field="${idField}" width="0" hidden="true"></th>
             <s:iterator value="showFields" id="field" status="st">
                 <s:if test="#field.map.size>0">
                     <s:select cssStyle="display: none" id="dict_%{#field.name}" list="#field.map"/>
-                    <th field="${field.name}" formatter="Common.${field.name}Formatter">${field.zh_name}</th>
+                    <th sortable="true" field="${field.name}" formatter="Common.${field.name}Formatter">
+                            ${field.zh_name}
+                    </th>
                 </s:if>
                 <s:elseif test="#field.type=='Date'">
-                    <th field="${field.name}" formatter="Common.DateFormatter">${field.zh_name}</th>
+                    <th sortable="true" field="${field.name}" formatter="Common.DateFormatter">
+                            ${field.zh_name}
+                    </th>
                 </s:elseif>
                 <s:elseif test="#field.type=='DateTime'">
-                    <th field="${field.name}" formatter="Common.DateTimeFormatter">${field.zh_name}</th>
+                    <th sortable="true" field="${field.name}" formatter="Common.DateTimeFormatter">
+                            ${field.zh_name}
+                    </th>
                 </s:elseif>
                 <s:else>
-                    <th field="${field.name}">${field.zh_name}</th>
+                    <th sortable="true" field="${field.name}">
+                            ${field.zh_name}
+                    </th>
                 </s:else>
             </s:iterator>
         </tr>
@@ -185,6 +203,7 @@ function add() {
         ]
     });
 }
+
 function edit() {
     var rows = $("#dg").datagrid("getSelections");
     if (rows.length != 1) {
@@ -408,51 +427,6 @@ function loadData() {
     });
 }
 
-/*function initData() {
- var fieldNames = $('#strEditFields').val();
- var splitFieldNames = fieldNames.split(",");
- alert(splitFieldNames);
- var aa = "";
- for (var i = 0; i < splitFieldNames.length; i++) {
- var val = $("#" + splitFieldNames[i]).val();
- aa += "'entityMap." + splitFieldNames[i] + "':'" + val + "',";
- }
- alert(aa);
- var field = eval("({" + aa.substr(0, aa.length - 1) + "})");
- return field;
- }*/
-
-//分页代码
-function pagerFilter(data) {
-    if (typeof data.length == 'number' && typeof data.splice == 'function') {    // is array
-        data = {
-            total: data.length,
-            rows: data
-        }
-    }
-    var dg = $(this);
-    var opts = dg.datagrid('options');
-    var pager = dg.datagrid('getPager');
-    pager.pagination({
-        onSelectPage: function (pageNum, pageSize) {
-            opts.pageNumber = pageNum;
-            opts.pageSize = pageSize;
-            pager.pagination('refresh', {
-                pageNumber: pageNum,
-                pageSize: pageSize
-            });
-            dg.datagrid('loadData', data);
-        }
-    });
-    if (!data.originalRows) {
-        data.originalRows = (data.rows);
-    }
-    var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
-    var end = start + parseInt(opts.pageSize);
-    data.rows = (data.originalRows.slice(start, end));
-    return data;
-}
-
 var Common = {
     TimeFormatter: function (value, rec, index) {
         if (value == undefined) {
@@ -485,23 +459,27 @@ var Common = {
     </s:iterator>
 };
 
-function dateFormat(date, format) {
-    var o = {
-        "M+": date.getMonth() + 1, //month
-        "d+": date.getDate(),    //day
-        "h+": date.getHours(),   //hour
-        "m+": date.getMinutes(), //minute
-        "s+": date.getSeconds(), //second
-        "q+": Math.floor((date.getMonth() + 3) / 3),  //quarter
-        "S": date.getMilliseconds() //millisecond
+function showDefinePanel() {
+    var definePanel = $('#definePanel');
+    if (definePanel.css('display') == 'block') {
+        $('#definePanelControl').html("显示自定义面板");
+        $('#definePanel').css('display', 'none');
     }
-    if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
-            (date.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)if (new RegExp("(" + k + ")").test(format))
-        format = format.replace(RegExp.$1,
-                RegExp.$1.length == 1 ? o[k] :
-                        ("00" + o[k]).substr(("" + o[k]).length));
-    return format;
+    else {
+        $('#definePanelControl').html("隐藏自定义面板");
+        $('#definePanel').css('display', 'block');
+    }
+}
+
+function showDefineColumn() {
+    var id = event.srcElement.id;
+    var str = id.substr('show_'.length);
+    if (event.srcElement.checked) {
+        $('#dg').datagrid('showColumn', str);
+    }
+    else {
+        $('#dg').datagrid('hideColumn', str);
+    }
 }
 </script>
 </body>

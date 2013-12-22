@@ -16,6 +16,7 @@
     <a href="role.do">角色管理</a>
     <a href="common.do?actionType=UserRole">用户角色关系</a>
     <a href="common.do?actionType=Resource">菜单管理</a>
+    <a href="resource!updateResourceMap.do">重新加载资源权限关系</a>
     在线人数${count}
 </div>
 </body>

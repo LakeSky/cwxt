@@ -395,6 +395,21 @@ public class CommonService extends BaseDao {
         return null;
     }
 
+    public List obtainAllFields(Class clazz) {
+        List list = new ArrayList();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            com.kzh.generate.common.entity.Field fieldInfo = new com.kzh.generate.common.entity.Field();
+            Annotation annotation = field.getAnnotation(Name.class);
+            if (annotation != null) {
+                fieldInfo.setName(field.getName());
+                fieldInfo.setZh_name(field.getAnnotation(Name.class).value());
+                list.add(fieldInfo);
+            }
+        }
+        return list;
+    }
+
     private Map initEntityClass() {
         Map entityClass = new HashMap<String, String>();
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();

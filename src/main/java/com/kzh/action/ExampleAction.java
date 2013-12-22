@@ -26,6 +26,7 @@ public class ExampleAction extends ActionSupport {
         this.setMessage("welcome to ssh action");
         return SUCCESS;
     }
+
     public String addName() {
         return SUCCESS;
     }

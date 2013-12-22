@@ -3,10 +3,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.kzh.app</groupId>
-    <artifactId>kzh-web-ssh-enterprise</artifactId>
+    <artifactId>cwxt</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>kzh-web-ssh-enterprise Maven Webapp</name>
+    <name>cwxt Maven Webapp</name>
     <url>http://maven.apache.org</url>
 
 
@@ -285,7 +285,7 @@
     </repositories>
 
     <build>
-        <finalName>kzh-web-ssh-enterprise</finalName>
+        <finalName>cwxt</finalName>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>

@@ -11,11 +11,13 @@ import com.kzh.util.struts.BaseAction;
 import org.apache.struts2.convention.annotation.ResultPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @ResultPath("/pages/system/security/")
+@Component
 public class ResourceAction extends BaseAction {
     @Autowired
     private ResourceDao service;

@@ -14,6 +14,7 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.ResultPath;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -27,11 +28,14 @@ import java.util.Map;
  * Time: 下午5:03
  */
 @ResultPath("/pages/generate/common")
+@Component
 public class CommonAction extends ActionSupport {
     @Autowired
     private CommonService service;
     private String actionType;
     private String fieldNames;
+    //所有字段信息
+    private List allFields;
     //可以展示的字段
     private List showFields;
     //可以编辑的字段
@@ -68,7 +72,7 @@ public class CommonAction extends ActionSupport {
         Class clazz = service.obtainClass(actionType.trim());
         String str = ((Object[]) entityMap.get("id"))[0].toString();
         Object o = null;
-        Class typeClass=service.obtainIdType(clazz);
+        Class typeClass = service.obtainIdType(clazz);
         if (typeClass.equals(int.class)) {
             o = service.getEntity(clazz, Integer.valueOf(str));
         } else {
@@ -89,11 +93,11 @@ public class CommonAction extends ActionSupport {
     public String execute() {
         Class clazz = service.obtainClass(actionType);
         fieldNames = service.obtainFiledNames(clazz);
+        allFields = service.obtainAllFields(clazz);
         showFields = service.obtainFieldsByAnnotation(clazz, Show.class);
         editFields = service.obtainFieldsByAnnotation(clazz, Edit.class);
         queryFields = service.obtainFieldsByAnnotation(clazz, Query.class);
         dictFields = service.obtainFieldsByAnnotation(clazz, Dict.class);
-//        strEditFields = service.listToStr(editFields);
         jsonEditFields = JSONArray.fromObject(editFields).toString();
         jsonQueryFields = JSONArray.fromObject(queryFields).toString();
         jsonDictFields = JSONArray.fromObject(dictFields).toString();
@@ -211,5 +215,13 @@ public class CommonAction extends ActionSupport {
 
     public void setDictFields(List dictFields) {
         this.dictFields = dictFields;
+    }
+
+    public List getAllFields() {
+        return allFields;
+    }
+
+    public void setAllFields(List allFields) {
+        this.allFields = allFields;
     }
 }

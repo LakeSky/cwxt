@@ -16,4 +16,5 @@
     <script type="text/javascript" src="<%=basePath%>/js/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="<%=basePath%>/js/jquery-easyui-1.3.2/plugins/jquery.tree.js"></script>
     <script type="text/javascript" src="<%=basePath%>/js/jquery-easyui-1.3.2/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/generate/common.js"></script>
 </head>
