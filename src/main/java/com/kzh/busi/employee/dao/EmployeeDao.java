@@ -1,13 +1,8 @@
 package com.kzh.busi.employee.dao;
 
 import com.kzh.util.hibernate.BaseDao;
+import org.springframework.stereotype.Component;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kzh
- * Date: 13-12-22
- * Time: 下午10:33
- * To change this template use File | Settings | File Templates.
- */
+@Component
 public class EmployeeDao extends BaseDao {
 }

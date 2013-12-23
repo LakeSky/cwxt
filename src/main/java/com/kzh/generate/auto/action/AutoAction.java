@@ -9,7 +9,6 @@ import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.ResultPath;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -59,15 +58,6 @@ public class AutoAction extends BaseAction {
 
     public String execute() {
         Class clazz = fieldService.obtainClass(o);
-        /*fieldNames = fieldService.obtainFiledNames(clazz);
-        allFields = fieldService.obtainAllFields(clazz);
-        showFields = fieldService.obtainFieldsByAnnotation(clazz, Show.class);
-        editFields = fieldService.obtainFieldsByAnnotation(clazz, Edit.class);
-        queryFields = fieldService.obtainFieldsByAnnotation(clazz, Query.class);
-        dictFields = fieldService.obtainFieldsByAnnotation(clazz, Dict.class);
-        jsonEditFields = JSONArray.fromObject(editFields).toString();
-        jsonQueryFields = JSONArray.fromObject(queryFields).toString();
-        jsonDictFields = JSONArray.fromObject(dictFields).toString();*/
         listAllFields = fieldService.obtainAllFields(clazz);
         jsonAllFields = JSONArray.fromObject(listAllFields).toString();
         idField = fieldService.obtainIdField(clazz);

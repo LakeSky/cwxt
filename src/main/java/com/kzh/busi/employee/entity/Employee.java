@@ -1,63 +1,34 @@
 package com.kzh.busi.employee.entity;
 
-import com.kzh.generate.common.DateTime;
-import com.kzh.generate.common.Edit;
-import com.kzh.generate.common.Name;
-import com.kzh.generate.common.Show;
-import com.kzh.generate.common.Query;
+import com.kzh.generate.auto.QField;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kzh
- * Date: 13-12-21
- * Time: 上午10:24
- * To change this template use File | Settings | File Templates.
- */
 @Entity
 @Table
 public class Employee {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-    @Name("id")
     private int id;
 
-    @Name("姓名")
-    @Show
-    @Edit
-    @Column(nullable = false)
-    @Query
+    @QField(name = "姓名", type = "text", actions = "show,query,edit", nullable = false)
     private String name;
-    @Name("联系方式")
-    @Show
-    @Edit
+    @QField(name = "联系方式", type = "text", actions = "show,query,edit", nullable = false)
     private String phone;
-    @Name("性别")
-    @Show
-    @Edit
+    @QField(name = "性别", type = "dict", actions = "edit,query",
+            dictValues = {"male", "男", "femal", "女"})
     private String sex;
-    @Name("身份证号")
-    @Show
-    @Edit
+    @QField(name = "身份证号", type = "text", actions = "show,query,edit")
     private String identity_card_id;
-    @Name("银行卡号")
-    @Show
-    @Edit
+    @QField(name = "银行卡号", type = "text", actions = "show,query,edit")
     private String bank_card_id;
-    @Name("编制")
-    @Show
-    @Edit
+    @QField(name = "编制", type = "text", actions = "show,query,edit")
     private String post;
-    @Name("入职日期")
-    @Show
-    @Edit
-    @DateTime
+    @QField(name = "入职日期", type = "date", actions = "show,query,edit")
     private String entry_date;
-    @Name("录入时间")
-    @Show
+    @QField(name = "录入时间", type = "date", actions = "show")
     private String record_date;
 
 

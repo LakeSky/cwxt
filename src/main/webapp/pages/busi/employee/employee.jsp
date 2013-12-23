@@ -8,7 +8,7 @@
     <s:hidden name="delIds" id="delIds"/>
     <s:hidden name="o" id="o"/>
     <s:hidden name="jsonAllFields" id="jsonAllFields"/>
-    <div id="tb" style="padding-top:5px;padding-left:20px;height:auto;background-color: azure">
+    <div id="tb" style="padding-top:5px;padding-left:20px;height:employee;">
         <div style="margin-bottom:5px">
             <a href="#" onclick="add()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
             <a href="#" onclick="edit();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">编辑</a>
@@ -19,62 +19,33 @@
                 <span id="definePanelControl">显示自定义面板</span>
             </a>
         </div>
-        <% int i = 0;%>
         <div style="padding-left: 5px;">
-            <table style="border: 1px;">
-                <s:iterator value="listAllFields" id="field" status="st">
-                    <s:if test="#field.actions.contains('query')">
-                        <% if (i % 3 == 0) {%>
-                        <tr>
-                            <% }%>
-                            <s:if test="#field.type=='dict'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td><s:select id="query_%{#field.name}" list="#field.map" cssStyle="vertical-align:middle"/></td>
-                            </s:if>
-                            <s:if test="#field.type=='date'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td>
-                                    <s:textfield id="query_start_%{#field.name}" cssClass="easyui-datebox" cssStyle="width:100px;vertical-align:middle"/>
-                                    - <s:textfield id="query_end_%{#field.name}" cssClass="easyui-datebox" cssStyle="width:100px;vertical-align:middle"/>
-                                </td>
-                            </s:if>
-                            <s:if test="#field.type=='time'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td>
-                                    <s:textfield id="query_start_%{#field.name}" cssClass="easyui-datetimebox" cssStyle="width:100px;vertical-align:middle"/>
-                                    - <s:textfield id="query_end_%{#field.name}" cssClass="easyui-datetimebox" cssStyle="width:100px;vertical-align:middle"/>
-                                </td>
-                            </s:if>
-                            <s:if test="#field.type=='text'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td><s:textfield id="query_%{#field.name}" cssStyle="vertical-align:middle"/></td>
-                            </s:if>
-                            <s:if test="#field.type=='textarea'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td><s:textfield id="query_%{#field.name}" cssStyle="vertical-align:middle"/></td>
-                            </s:if>
-                            <% i++;
-                                if (i % 3 == 0) {%>
-                        </tr>
-                        <% }%>
+            <s:iterator value="listAllFields" id="field" status="st">
+                <s:if test="#field.actions.contains('query')">
+                    <s:if test="#field.type=='dict'">
+                        ${field.zh_name}:<s:select id="query_%{#field.name}" list="#field.map" cssStyle="vertical-align:middle"/>
                     </s:if>
-                </s:iterator>
-                <tr>
-                    <td>
-                        <a href="#" class="easyui-linkbutton" plain="true">多个姓名查询:</a>
-                    </td>
-                    <td colspan="3">
-                        <s:textarea cssStyle="width: 500px;"></s:textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    </td>
-                    <td colspan="3">
-                        <a href="#" onclick="loadData()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
-                    </td>
-                </tr>
-            </table>
+                    <s:if test="#field.type=='date'">
+                        ${field.zh_name}:
+                        <s:textfield id="query_start_%{#field.name}" cssClass="easyui-datebox" cssStyle="width:100px;vertical-align:middle"/>
+                        - <s:textfield id="query_end_%{#field.name}" cssClass="easyui-datebox" cssStyle="width:100px;vertical-align:middle"/>
+                    </s:if>
+                    <s:if test="#field.type=='time'">
+                        ${field.zh_name}:
+                        <s:textfield id="query_start_%{#field.name}" cssClass="easyui-datetimebox" cssStyle="width:100px;vertical-align:middle"/>
+                        - <s:textfield id="query_end_%{#field.name}" cssClass="easyui-datetimebox" cssStyle="width:100px;vertical-align:middle"/>
+                    </s:if>
+                    <s:if test="#field.type=='text'">
+                        ${field.zh_name}:
+                        <s:textfield id="query_%{#field.name}" cssStyle="vertical-align:middle"/>
+                    </s:if>
+                    <s:if test="#field.type=='textarea'">
+                        ${field.zh_name}:
+                        <s:textfield id="query_%{#field.name}" cssStyle="vertical-align:middle"/>
+                    </s:if>
+                </s:if>
+            </s:iterator>
+            <a href="#" onclick="loadData()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
         </div>
         <div id="definePanel" style="display: none;padding: 1px;background-color: white">
             <fieldset>
@@ -88,7 +59,7 @@
         </div>
     </div>
 
-    <table id="dg" class="easyui-datagrid" style="height: auto;border: 1px;" title="" data-options="
+    <table id="dg" class="easyui-datagrid" style="height: employee;border: 1px;" title="" data-options="
 				rownumbers:true,
 				singleSelect:false,
 				autoRowHeight:true,
@@ -131,7 +102,7 @@
 
     <div id="dd" class="easyui-dialog" title="My Dialog" style="width:400px;height:200px;"
          data-options="width:400,height:400,resizable:true,modal:true,closed:true,cache:false">
-        <form id="form" action="auto" method="post">
+        <form id="form" action="employee" method="post">
             <table id="editTable">
                 <s:iterator value="listAllFields" id="field" status="st">
                     <s:if test="#field.actions.contains('edit')">
@@ -234,7 +205,7 @@ function add() {
                     }
                     $.ajax({
                         type: "POST",
-                        url: "auto!save.do?o=" + $('#o').val() + "&random=" + Math.random(),
+                        url: "employee!save.do?o=" + $('#o').val() + "&random=" + Math.random(),
                         data: initDataWithJson(),
                         async: false,
                         success: function (data) {
@@ -297,7 +268,7 @@ function edit() {
                     }
                     $.ajax({
                         type: "POST",
-                        url: "auto!update.do?o=" +
+                        url: "employee!update.do?o=" +
                                 $('#o').val() + "&entityMap." + $('#idField').val() + "="
                                 + rows[0][$('#idField').val()] + "&random=" + Math.random(),
                         data: initDataWithJson(),
@@ -358,7 +329,7 @@ function editByDoubleClick(row) {
                     }
                     $.ajax({
                         type: "POST",
-                        url: "auto!update.do?o=" +
+                        url: "employee!update.do?o=" +
                                 $('#o').val() + "&entityMap." + $('#idField').val() + "="
                                 + rows[0][$('#idField').val()] + "&random=" + Math.random(),
                         data: initDataWithJson(),
@@ -397,7 +368,7 @@ function del() {
             }
             $.ajax({
                 type: "POST",
-                url: "auto!del.do?o=" + $('#o').val() + " &random=" + Math.random(),
+                url: "employee!del.do?o=" + $('#o').val() + " &random=" + Math.random(),
                 data: {"delIds": delIds.substr(0, delIds.length - 1)},
                 async: false,
                 success: function (data) {
@@ -478,7 +449,7 @@ function initQueryDataWithJson() {
 }
 
 function loadData() {
-    var url = "auto!query.do?o=" + $('#o').val() + "&random=" + Math.random();
+    var url = "employee!query.do?o=" + $('#o').val() + "&random=" + Math.random();
     $.ajax({
         type: "POST",
         url: url,
