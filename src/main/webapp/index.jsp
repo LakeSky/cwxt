@@ -6,7 +6,7 @@
     <%--<c:url value="/j_spring_security_logout" var="logoutUrl"/>--%>
     <a href="${pageContext.request.contextPath}/j_spring_security_logout">Log Out</a>
 </div>
-<div data-options="region:'south',split:true" style="height:50px;"></div>
+<%--<div data-options="region:'south',split:true" style="height:50px;"></div>--%>
 <div data-options="region:'west',split:true" title="菜单" style="width:180px;">
     <ul class="easyui-tree"></ul>
 </div>

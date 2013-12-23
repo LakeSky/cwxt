@@ -8,4 +8,6 @@ package com.kzh.system;
 public class ApplicationConstant {
     public final static String generate_entity_pakage_name = "com.kzh.busi.entity.";
     public final static String entity_pattern = "classpath*:/com/kzh/*/*/entity/*.class";
+    //临时文件位置
+    public static final String TempFilePath = "C:\\movie\\temp\\";
 }

@@ -20,61 +20,23 @@
                 <span id="definePanelControl">显示自定义面板</span>
             </a>
         </div>
-        <% int i = 0;%>
         <div style="padding-left: 5px;">
-            <table style="border: 1px;">
-                <s:iterator value="listAllFields" id="field" status="st">
-                    <s:if test="#field.actions.contains('query')">
-                        <% if (i % 3 == 0) {%>
-                        <tr>
-                            <% }%>
-                            <s:if test="#field.type=='dict'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td><s:select id="query_%{#field.name}" list="#field.map" cssStyle="vertical-align:middle"/></td>
-                            </s:if>
-                            <s:if test="#field.type=='date'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td>
-                                    <s:textfield id="query_start_%{#field.name}" cssClass="easyui-datebox" cssStyle="width:100px;vertical-align:middle"/>
-                                    - <s:textfield id="query_end_%{#field.name}" cssClass="easyui-datebox" cssStyle="width:100px;vertical-align:middle"/>
-                                </td>
-                            </s:if>
-                            <s:if test="#field.type=='time'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td>
-                                    <s:textfield id="query_start_%{#field.name}" cssClass="easyui-datetimebox" cssStyle="width:100px;vertical-align:middle"/>
-                                    - <s:textfield id="query_end_%{#field.name}" cssClass="easyui-datetimebox" cssStyle="width:100px;vertical-align:middle"/>
-                                </td>
-                            </s:if>
-                            <s:if test="#field.type=='text'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td><s:textfield id="query_%{#field.name}" cssStyle="vertical-align:middle"/></td>
-                            </s:if>
-                            <s:if test="#field.type=='textarea'">
-                                <td><a href="#" class="easyui-linkbutton" plain="true">${field.zh_name}:</a></td>
-                                <td><s:textfield id="query_%{#field.name}" cssStyle="vertical-align:middle"/></td>
-                            </s:if>
-                            <% i++;
-                                if (i % 3 == 0) {%>
-                        </tr>
-                        <% }%>
-                    </s:if>
-                </s:iterator>
-                <%if (i % 3 != 0) {%>
-                </tr>
-                <% }%>
-                <tr>
-                    <td>
-                        <a href="#" class="easyui-linkbutton" plain="true">多姓名查询:</a>
-                    </td>
-                    <td colspan="3">
-                        <s:textarea id="multiNames"></s:textarea><s:file id="queryExcel"></s:file>
-                    </td>
-                    <td colspan="3">
-                        <a href="#" onclick="loadData()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
-                    </td>
-                </tr>
-            </table>
+            <s:form action="employee" method="post" enctype="multipart/form-data">
+                <table style="border: 1px;">
+                    <tr>
+                        <td>
+                            <a href="#" class="easyui-linkbutton" plain="true">多姓名查询:</a>
+                        </td>
+                        <td colspan="3">
+                            <s:textarea id="multiNames" name="multiNames"></s:textarea><s:file id="queryExcel" name="queryExcel"></s:file>
+                        </td>
+                        <td colspan="3">
+                                <%--<a href="#" onclick="loadData()" class="easyui-linkbutton" iconCls="icon-search">查询</a>--%>
+                            <s:submit method="multQuery" value="查询"/>
+                        </td>
+                    </tr>
+                </table>
+            </s:form>
         </div>
         <div id="definePanel" style="display: none;padding: 1px;background-color: white">
             <fieldset>
@@ -482,11 +444,10 @@ function initQueryDataWithJson() {
 }
 
 function loadData() {
-    var url = "employee!query.do?o=" + $('#o').val() + "&random=" + Math.random();
+    var url = "employee!query.do?random=" + Math.random();
     $.ajax({
         type: "POST",
         url: url,
-        data: initQueryDataWithJson(),
         async: false,
         success: function (data) {
             $('#dg').datagrid({loadFilter: pagerFilter}).datagrid('loadData', eval(data));

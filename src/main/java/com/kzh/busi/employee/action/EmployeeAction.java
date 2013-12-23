@@ -1,19 +1,24 @@
 package com.kzh.busi.employee.action;
 
 import com.kzh.busi.employee.dao.EmployeeDao;
+import com.kzh.busi.employee.entity.Employee;
 import com.kzh.generate.auto.service.FieldService;
 import com.kzh.util.PrintWriter;
+import com.kzh.util.excel.Excel;
 import com.kzh.util.struts.BaseAction;
 import net.sf.json.JSONArray;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.ResultPath;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 @ResultPath("/pages/busi/employee")
+@Component
 public class EmployeeAction extends BaseAction {
     @Autowired
     private FieldService fieldService;
@@ -23,10 +28,12 @@ public class EmployeeAction extends BaseAction {
     private List listAllFields;
     private String jsonAllFields;
 
-    private String o;
+    private String o = "Employee";
     private Map entityMap;
     private String delIds;
     private String idField;
+    private String multiNames;
+    private File queryExcel;
 
     @Action(value = "save", interceptorRefs = {@InterceptorRef("token"), @InterceptorRef("tokenSession")})
     public String save() throws Exception {
@@ -71,6 +78,23 @@ public class EmployeeAction extends BaseAction {
         Class clazz = fieldService.obtainClass(o);
         fieldService.del(delIds, clazz);
         return SUCCESS;
+    }
+
+    //转存用到的多个名字查询和导入excel查询方式
+    public String zhuanCun() {
+        Class clazz = fieldService.obtainClass(o);
+        listAllFields = fieldService.obtainAllFields(clazz);
+        jsonAllFields = JSONArray.fromObject(listAllFields).toString();
+        idField = fieldService.obtainIdField(clazz);
+        return "zhuan";
+    }
+
+    public String multQuery() throws Exception {
+        JSONArray jsonArray = JSONArray.fromObject(fieldService.queryBySql(Employee.class, entityMap));
+        List list = Excel.obtainFirstSheetAndCell(queryExcel);
+        System.out.println(list);
+//        PrintWriter.print(jsonArray.toString());
+        return "zhuan";
     }
 
     //-----get/set----------------------
@@ -129,5 +153,29 @@ public class EmployeeAction extends BaseAction {
 
     public void setIdField(String idField) {
         this.idField = idField;
+    }
+
+    public EmployeeDao getDao() {
+        return dao;
+    }
+
+    public void setDao(EmployeeDao dao) {
+        this.dao = dao;
+    }
+
+    public String getMultiNames() {
+        return multiNames;
+    }
+
+    public void setMultiNames(String multiNames) {
+        this.multiNames = multiNames;
+    }
+
+    public File getQueryExcel() {
+        return queryExcel;
+    }
+
+    public void setQueryExcel(File queryExcel) {
+        this.queryExcel = queryExcel;
     }
 }
