@@ -15,4 +15,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
 public @interface Time {
+    //时间类型
+    String timeFormat() default "yyyy-MM-dd HH:mm:ss";
 }

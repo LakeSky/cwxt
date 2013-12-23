@@ -1,4 +1,4 @@
-package com.kzh.generate.common.entity;
+package com.kzh.generate.auto.entity;
 
 import com.kzh.generate.common.*;
 import com.kzh.generate.auto.QField;
@@ -15,56 +15,35 @@ import java.util.Date;
  */
 @Entity
 @Table
-public class Test {
+public class Auto {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-    @Name("id")
     private int id;
 
-    @Name("姓名")
-    @Show
-    @Edit
-    @Query
-    @Column(nullable = false)
-    @QField(name = "姓名", type = "text", actions = "show,edit")
+    @QField(name = "姓名", type = "text", actions = "show,query,edit", nullable = false)
     private String name;
 
-    @Name("年龄")
-    @Show
-    @Edit
+    @QField(name = "年龄", type = "text", actions = "show,edit", nullable = false)
     private int age;
 
-    @Name("出生日期")
-    @Show
-    @Edit
-    @Query
-    @Column(nullable = false)
+    @QField(name = "出生日期", type = "date", actions = "show,edit,query", nullable = false)
     private Date birthday;
 
-    @Name("个人故事")
-    @Edit
-    @Column(length = 1000)
+    @QField(name = "故事", type = "textarea", actions = "edit", nullable = false)
     private String story;
 
-    @Name("姓别")
-    @Edit
-    @Query
-    @Dict(values = {"male", "男", "femal", "女"})
-    @Show
+    @QField(name = "性别", type = "dict", actions = "edit,query",
+            nullable = false, dictValues = {"male", "男", "femal", "女"})
     private String sex;
 
-    @Name("国家")
+    /*@Name("国家")
     @Edit
     @Dict(type = "dynamic", values = {"select name,zh_name from country"})
     @Show
-    private String country;
+    private String country;*/
 
-    @Name("提醒时间")
-    @Edit
-    @Show
-    @DateTime
-    @Query
+    @QField(name = "提醒时间", type = "time", actions = "show,edit", nullable = false)
     private Date alarm_time;
 
     public int getId() {
@@ -115,14 +94,6 @@ public class Test {
         this.sex = sex;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
     public Date getAlarm_time() {
         return alarm_time;
     }
@@ -130,4 +101,6 @@ public class Test {
     public void setAlarm_time(Date alarm_time) {
         this.alarm_time = alarm_time;
     }
+
+
 }

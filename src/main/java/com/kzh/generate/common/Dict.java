@@ -15,7 +15,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
 public @interface Dict {
+    //类型可以为static,dynamic如果是dynamic请指定相应取值的sql
     String type() default "static";
 
     String[] values() default {};
+
+    String sql() default "";
 }
