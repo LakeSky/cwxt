@@ -56,13 +56,13 @@ public class ResourceDao extends BaseDao {
                 "    (select " +
                 "            count(*)" +
                 "        from" +
-                "            resource t6" +
+                "            Resource t6" +
                 "        where" +
                 "            t6.parent_id = t3.menu_id) child_count" +
                 " from" +
-                "    user t1," +
-                "    role t2," +
-                "    resource t3," +
+                "    User t1," +
+                "    Role t2," +
+                "    Resource t3," +
                 "    user_role t4," +
                 "    resource_role t5" +
                 " where" +

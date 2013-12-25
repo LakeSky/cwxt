@@ -19,13 +19,13 @@ public class UserRole {
     @Show
     @Query
     @Edit
-    @Dict(type = "dynamic", values = {"select id,username from user"})
+    @Dict(type = "dynamic", values = {"select id,username from User"})
     private String user_id;
     @Name("角色")
     @Show
     @Query
     @Edit
-    @Dict(type = "dynamic", values = {"select id,name from role"})
+    @Dict(type = "dynamic", values = {"select id,name from Role"})
     private String role_id;
 
     public String getId() {

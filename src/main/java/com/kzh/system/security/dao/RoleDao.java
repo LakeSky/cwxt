@@ -29,7 +29,7 @@ public class RoleDao extends BaseDao {
     }
 
     public List queryBySql() {
-        String sql = "select * from role";
+        String sql = "select * from Role";
         SQLQuery sqlQuery = getCurrentSession().createSQLQuery(sql);
         sqlQuery.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
         return sqlQuery.list();

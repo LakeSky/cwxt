@@ -19,13 +19,13 @@ public class ResourceRole {
     @Show
     @Query
     @Edit
-    @Dict(type = "dynamic", values = {"select id,menu_name from resource"})
+    @Dict(type = "dynamic", values = {"select id,menu_name from Resource"})
     private String resource_id;
     @Name("角色")
     @Show
     @Query
     @Edit
-    @Dict(type = "dynamic", values = {"select id,name from role"})
+    @Dict(type = "dynamic", values = {"select id,name from Role"})
     private String role_id;
 
     public String getId() {

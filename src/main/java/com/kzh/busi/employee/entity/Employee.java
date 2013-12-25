@@ -95,4 +95,12 @@ public class Employee {
     public void setRecord_date(String record_date) {
         this.record_date = record_date;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }
