@@ -6,14 +6,20 @@ import com.kzh.generate.auto.service.FieldService;
 import com.kzh.util.PrintWriter;
 import com.kzh.util.excel.Excel;
 import com.kzh.util.struts.BaseAction;
+import com.opensymphony.xwork2.ActionContext;
 import net.sf.json.JSONArray;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.ResultPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +38,7 @@ public class EmployeeAction extends BaseAction {
     private Map entityMap;
     private String delIds;
     private String idField;
-    private String multiNames;
+    private String multiNames = "";
     private File queryExcel;
 
     @Action(value = "save", interceptorRefs = {@InterceptorRef("token"), @InterceptorRef("tokenSession")})
@@ -89,12 +95,57 @@ public class EmployeeAction extends BaseAction {
         return "zhuan";
     }
 
-    public String multQuery() throws Exception {
-        JSONArray jsonArray = JSONArray.fromObject(fieldService.queryBySql(Employee.class, entityMap));
-        List list = Excel.obtainFirstSheetAndCell(queryExcel);
-        System.out.println(list);
-//        PrintWriter.print(jsonArray.toString());
+    public String initMultiNames() throws Exception {
+        Class clazz = fieldService.obtainClass(o);
+        listAllFields = fieldService.obtainAllFields(clazz);
+        jsonAllFields = JSONArray.fromObject(listAllFields).toString();
+        idField = fieldService.obtainIdField(clazz);
+
+        if (queryExcel != null) {
+            List list = Excel.obtainFirstSheetAndCell(queryExcel);
+            for (Object str : list) {
+                if (str != null && StringUtils.isNotBlank(str.toString())) {
+                    multiNames += str.toString() + ",";
+                }
+            }
+        }
+        if (StringUtils.isNotBlank(multiNames)) {
+            multiNames = multiNames.substring(0, multiNames.length() - 1);
+        }
         return "zhuan";
+    }
+
+    public String multQuery() throws Exception {
+        JSONArray jsonArray = JSONArray.fromObject(dao.multQuery(multiNames));
+        PrintWriter.print(jsonArray.toString());
+        return null;
+    }
+
+    public String exportExcel() throws Exception {
+        String[] head = {"手机号", "影院名称", "票类型", "价格", "兑换日期"};
+        Employee entity = new Employee();
+        List exchangedList = dao.multQuery(multiNames);
+
+        List<String[]> contents = new ArrayList<String[]>();
+        contents.add(head);
+        String[] content;
+        for (int i = 0; i < exchangedList.size(); i++) {
+            Employee exchanged = (Employee) exchangedList.get(i);
+            content = new String[head.length];
+            content[0] = exchanged.getPhone();
+            SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            content[4] = sim.format(exchanged.getRecord_date());
+            contents.add(content);
+        }
+        HttpServletResponse response = (HttpServletResponse) ActionContext.getContext().get(ServletActionContext.HTTP_RESPONSE);
+//        HttpServletRequest request = (HttpServletRequest) ActionContext.getContext().get(ServletActionContext.HTTP_REQUEST);
+        String fileName = Excel.simpleExportExcel(contents);
+        /*String path = request.getContextPath();
+        String basePath = request.getScheme() + "://"
+                + request.getServerName() + ":" + request.getServerPort()
+                + path + "/";*/
+        response.sendRedirect("download.do?fileName=" + fileName);
+        return SUCCESS;
     }
 
     //-----get/set----------------------

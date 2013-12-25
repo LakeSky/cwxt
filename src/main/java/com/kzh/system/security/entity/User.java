@@ -20,6 +20,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    @Column(length = 50)
     @Name("id")
     private String id;
     @Name("用户名")

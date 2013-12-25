@@ -17,13 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: kzh
- * Date: 13-10-20
- * Time: 下午2:32
- * To change this template use File | Settings | File Templates.
- */
 public class Excel {
     public static String simpleExportExcel(List<String[]> list) {
         HSSFWorkbook wb = new HSSFWorkbook();
@@ -62,7 +55,7 @@ public class Excel {
             workBook = new HSSFWorkbook(new FileInputStream(file));
         }
         Sheet sheet = workBook.getSheetAt(0);
-        for (int i = 0; i < sheet.getLastRowNum(); i++) {
+        for (int i = 0; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
             Cell cell = row.getCell(0);
             list.add(getValue(cell));

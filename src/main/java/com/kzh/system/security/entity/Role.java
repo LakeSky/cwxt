@@ -20,6 +20,7 @@ public class Role {
     @Id
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    @Column(length = 50)
     private String id;
 
     @Name("角色")

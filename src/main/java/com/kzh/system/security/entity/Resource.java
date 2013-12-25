@@ -18,6 +18,7 @@ public class Resource {
     @Id
     @GeneratedValue(generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    @Column(length = 50)
     private String id;
     @Name("是否菜单")
     @Show
