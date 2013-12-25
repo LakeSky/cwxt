@@ -122,19 +122,25 @@ public class EmployeeAction extends BaseAction {
     }
 
     public String exportExcel() throws Exception {
-        String[] head = {"手机号", "影院名称", "票类型", "价格", "兑换日期"};
+        String[] head = {"姓名", "联系方式", "性别", "身份证号", "银行卡号", "银行卡号", "职称", "入职日期", "录入时间"};
         Employee entity = new Employee();
         List exchangedList = dao.multQuery(multiNames);
-
         List<String[]> contents = new ArrayList<String[]>();
         contents.add(head);
         String[] content;
         for (int i = 0; i < exchangedList.size(); i++) {
             Employee exchanged = (Employee) exchangedList.get(i);
             content = new String[head.length];
-            content[0] = exchanged.getPhone();
+            content[0] = exchanged.getName();
+            content[1] = exchanged.getPhone();
+            content[2] = exchanged.getSex();
+            content[4] = exchanged.getIdentity_card_id();
+            content[5] = exchanged.getBank_card_id();
+            content[6] = exchanged.getPost();
+            SimpleDateFormat simDate = new SimpleDateFormat("yyyy-MM-dd");
+            content[7] = simDate.format(exchanged.getEntry_date());
             SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            content[4] = sim.format(exchanged.getRecord_date());
+            content[8] = sim.format(exchanged.getRecord_date());
             contents.add(content);
         }
         HttpServletResponse response = (HttpServletResponse) ActionContext.getContext().get(ServletActionContext.HTTP_RESPONSE);

@@ -1,6 +1,7 @@
 package com.kzh.busi.employee.entity;
 
 import com.kzh.generate.auto.QField;
+import com.kzh.generate.common.Date;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -27,9 +28,9 @@ public class Employee {
     @QField(name = "编制", type = "text", actions = "show,query,edit")
     private String post;
     @QField(name = "入职日期", type = "date", actions = "show,query,edit")
-    private String entry_date;
-    @QField(name = "录入时间", type = "date", actions = "show")
-    private String record_date;
+    private Date entry_date;
+    @QField(name = "录入时间", type = "time", actions = "show")
+    private Date record_date;
 
 
     public int getId() {
@@ -80,19 +81,19 @@ public class Employee {
         this.post = post;
     }
 
-    public String getEntry_date() {
+    public Date getEntry_date() {
         return entry_date;
     }
 
-    public void setEntry_date(String entry_date) {
+    public void setEntry_date(Date entry_date) {
         this.entry_date = entry_date;
     }
 
-    public String getRecord_date() {
+    public Date getRecord_date() {
         return record_date;
     }
 
-    public void setRecord_date(String record_date) {
+    public void setRecord_date(Date record_date) {
         this.record_date = record_date;
     }
 
