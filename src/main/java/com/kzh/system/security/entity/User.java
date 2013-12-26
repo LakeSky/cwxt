@@ -3,6 +3,7 @@ package com.kzh.system.security.entity;
 import com.kzh.generate.common.*;
 import com.kzh.generate.common.Query;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -90,7 +91,8 @@ public class User implements UserDetails {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        ShaPasswordEncoder sha = new ShaPasswordEncoder();
+        this.password = sha.encodePassword(password, this.getUsername());
     }
 
     public boolean isAccountNonExpired() {

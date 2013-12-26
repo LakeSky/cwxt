@@ -46,7 +46,11 @@
 
     <!-- 实现了UserDetailsService的Bean -->
     <authentication-manager alias="myAuthenticationManager">
-        <authentication-provider user-service-ref="myUserDetailServiceImpl"/>
+        <authentication-provider user-service-ref="myUserDetailServiceImpl">
+            <password-encoder hash="sha">
+                <salt-source user-property="username"/>
+            </password-encoder>
+        </authentication-provider>
     </authentication-manager>
     <beans:bean id="myAccessDecisionManager" class="com.kzh.system.security.MyAccessDecisionManager"/>
     <beans:bean id="mySecurityMetadataSource" class="com.kzh.system.security.MySecurityMetadataSource"/>
