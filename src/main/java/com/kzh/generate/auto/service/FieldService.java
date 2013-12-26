@@ -6,6 +6,7 @@ import com.kzh.generate.common.DateTime;
 import com.kzh.system.ApplicationConstant;
 import com.kzh.util.hibernate.BaseDao;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.core.io.Resource;
@@ -255,6 +256,62 @@ public class FieldService extends BaseDao {
         SQLQuery query = getCurrentSession().createSQLQuery(hql);
         query.setProperties(copyMap);
         query.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+        return query.list();
+    }
+
+    public List queryByHql(Class clazz, Map map) throws Exception {
+        Map copyMap = new HashMap();
+        if (map == null) {
+            map = new HashMap();
+        }
+        copyMap.putAll(map);
+        String hql = "from " + StringUtils.capitalize(clazz.getSimpleName().toLowerCase()) + " t where 1=1";
+        Table table = (Table) clazz.getAnnotation(Table.class);
+        if (table != null && StringUtils.isNotBlank(table.name())) {
+            hql = "from " + StringUtils.capitalize(clazz.getSimpleName().toLowerCase()) + " t where 1=1";
+        }
+        Set keyset = map.keySet();
+        Iterator it = keyset.iterator();
+        while (it.hasNext()) {
+            String str = (String) it.next();
+            String[] strs = (String[]) map.get(str);
+            Class typeClass;
+            if (str.startsWith("HHHHHHstart_") || str.startsWith("HHHHHHend_")) {
+                typeClass = clazz.getDeclaredField(str.substring(str.indexOf("_") + 1)).getType();
+                if (StringUtils.isNotBlank(strs[0])) {
+                    copyMap.remove(str);
+                    DateTime dateTime = clazz.getDeclaredField(str.substring(str.indexOf("_") + 1)).getAnnotation(DateTime.class);
+                    SimpleDateFormat sim;
+                    if (dateTime != null) {
+                        sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    } else {
+                        sim = new SimpleDateFormat("yyyy-MM-dd");
+                    }
+                    copyMap.put(str, sim.parse(strs[0]));
+                }
+            } else {
+                typeClass = clazz.getDeclaredField(str).getType();
+            }
+            if (StringUtils.isNotBlank(strs[0])) {
+                if (typeClass.equals(int.class)) {
+                    hql += " and t." + str + "=:" + str;
+                }
+                if (typeClass.equals(Date.class)) {
+                    if (str.startsWith("HHHHHHstart_")) {
+                        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+                        hql += " and t." + str.substring(str.indexOf("_") + 1) + " >=:" + str;
+                    } else {
+                        hql += " and t." + str.substring(str.indexOf("_") + 1) + " <=:" + str;
+                    }
+                }
+                if (typeClass.equals(String.class)) {
+                    hql += " and t." + str + "=:" + str;
+                }
+            }
+        }
+        Query query = getCurrentSession().createQuery(hql);
+        query.setProperties(copyMap);
+        //query.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
         return query.list();
     }
 }

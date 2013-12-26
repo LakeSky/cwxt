@@ -40,6 +40,7 @@ public class EmployeeAction extends BaseAction {
     private String idField;
     private String multiNames = "";
     private File queryExcel;
+    private File importExcel;
 
     @Action(value = "save", interceptorRefs = {@InterceptorRef("token"), @InterceptorRef("tokenSession")})
     public String save() throws Exception {
@@ -67,7 +68,7 @@ public class EmployeeAction extends BaseAction {
 
     public String query() throws Exception {
         Class clazz = fieldService.obtainClass(o);
-        JSONArray jsonArray = JSONArray.fromObject(fieldService.queryBySql(clazz, entityMap));
+        JSONArray jsonArray = JSONArray.fromObject(fieldService.queryByHql(clazz, entityMap));
         PrintWriter.print(jsonArray.toString());
         return null;
     }
@@ -102,7 +103,7 @@ public class EmployeeAction extends BaseAction {
         idField = fieldService.obtainIdField(clazz);
 
         if (queryExcel != null) {
-            List list = Excel.obtainFirstSheetAndCell(queryExcel);
+            List list = Excel.obtainFirstSheetFirstColumn(queryExcel);
             for (Object str : list) {
                 if (str != null && StringUtils.isNotBlank(str.toString())) {
                     multiNames += str.toString() + ",";
@@ -154,6 +155,16 @@ public class EmployeeAction extends BaseAction {
         return SUCCESS;
     }
 
+    public String importEmployee() {
+        listAllFields = fieldService.obtainAllFields(Employee.class);
+        return "import";
+    }
+
+    public String importExcel() throws Exception {
+        dao.importExcel(importExcel, fieldService.obtainAllFields(Employee.class));
+        listAllFields = fieldService.obtainAllFields(Employee.class);
+        return "import";
+    }
     //-----get/set----------------------
 
     public FieldService getFieldService() {
@@ -234,5 +245,13 @@ public class EmployeeAction extends BaseAction {
 
     public void setQueryExcel(File queryExcel) {
         this.queryExcel = queryExcel;
+    }
+
+    public File getImportExcel() {
+        return importExcel;
+    }
+
+    public void setImportExcel(File importExcel) {
+        this.importExcel = importExcel;
     }
 }

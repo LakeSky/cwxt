@@ -10,4 +10,6 @@ public class ApplicationConstant {
     public final static String entity_pattern = "classpath*:/com/kzh/*/*/entity/*.class";
     //临时文件位置
     public static final String TempFilePath = "C:\\movie\\temp\\";
+    public static final String encryptKey = "TIfC0z6v29VHLatvYkRs5A==";
+
 }

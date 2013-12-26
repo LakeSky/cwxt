@@ -61,19 +61,17 @@
                     </s:if>
                 </s:iterator>
                 <%if (i % 3 != 0) {%>
+                <td colspan="3">
+                    <a href="#" onclick="loadData()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+                </td>
                 </tr>
-                <% }%>
+                <% } else {%>
                 <tr>
-                    <td>
-                        <a href="#" class="easyui-linkbutton" plain="true">多姓名查询:</a>
-                    </td>
-                    <td colspan="3">
-                        <s:textarea id="multiNames"></s:textarea><s:file id="queryExcel"></s:file>
-                    </td>
                     <td colspan="3">
                         <a href="#" onclick="loadData()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
                     </td>
                 </tr>
+                <% }%>
             </table>
         </div>
         <div id="definePanel" style="display: none;padding: 1px;background-color: white">
@@ -93,7 +91,7 @@
 				singleSelect:false,
 				autoRowHeight:true,
 				pagination:true,
-				pageSize:20,
+				pageSize:10,
 				<%--fit:true,--%>
                 toolbar:'#tb'">
         <thead>
@@ -269,13 +267,17 @@ function edit() {
             var type = jsonFieldNames[i].type;
             if (type == "date") {
                 var date = new Date();
-                date.setTime(rows[0][jsonFieldNames[i].name].time);
-                $("#" + jsonFieldNames[i].name).datebox('setValue', dateFormat(date, 'yyyy-MM-dd'));
+                if (rows[0][jsonFieldNames[i].name] != null) {
+                    date.setTime(rows[0][jsonFieldNames[i].name].time);
+                    $("#" + jsonFieldNames[i].name).datebox('setValue', dateFormat(date, 'yyyy-MM-dd'));
+                }
             }
             else if (type == "time") {
                 var date = new Date();
-                date.setTime(rows[0][jsonFieldNames[i].name].time);
-                $("#" + jsonFieldNames[i].name).datebox('setValue', dateFormat(date, 'yyyy-MM-dd HH:mm:ss'));
+                if (rows[0][jsonFieldNames[i].name] != null) {
+                    date.setTime(rows[0][jsonFieldNames[i].name].time);
+                    $("#" + jsonFieldNames[i].name).datebox('setValue', dateFormat(date, 'yyyy-MM-dd HH:mm:ss'));
+                }
             }
             else {
                 $("#" + jsonFieldNames[i].name).val(rows[0][jsonFieldNames[i].name]);
@@ -330,13 +332,17 @@ function editByDoubleClick(row) {
             var type = jsonFieldNames[i].type;
             if (type == "date") {
                 var date = new Date();
-                date.setTime(rows[0][jsonFieldNames[i].name].time);
-                $("#" + jsonFieldNames[i].name).datebox('setValue', dateFormat(date, 'yyyy-MM-dd'));
+                if (rows[0][jsonFieldNames[i].name] != null) {
+                    date.setTime(rows[0][jsonFieldNames[i].name].time);
+                    $("#" + jsonFieldNames[i].name).datebox('setValue', dateFormat(date, 'yyyy-MM-dd'));
+                }
             }
             else if (type == "time") {
                 var date = new Date();
-                date.setTime(rows[0][jsonFieldNames[i].name].time);
-                $("#" + jsonFieldNames[i].name).datebox('setValue', dateFormat(date, 'yyyy-MM-dd HH:mm:ss'));
+                if (rows[0][jsonFieldNames[i].name] != null) {
+                    date.setTime(rows[0][jsonFieldNames[i].name].time);
+                    $("#" + jsonFieldNames[i].name).datebox('setValue', dateFormat(date, 'yyyy-MM-dd HH:mm:ss'));
+                }
             }
             else {
                 $("#" + jsonFieldNames[i].name).val(rows[0][jsonFieldNames[i].name]);
@@ -482,16 +488,18 @@ function initQueryDataWithJson() {
 }
 
 function loadData() {
-    var url = "employee!query.do?o=" + $('#o').val() + "&random=" + Math.random();
+    var url = "employee!query.do?o=Employee&random=" + Math.random();
     $.ajax({
         type: "POST",
         url: url,
         data: initQueryDataWithJson(),
-        async: false,
+        async: true,
         success: function (data) {
             $('#dg').datagrid({loadFilter: pagerFilter}).datagrid('loadData', eval(data));
         }
     });
+
+    $('#dg').pagination({pageNumber: 1});
 }
 
 var Common = {
@@ -552,6 +560,7 @@ function showDefineColumn() {
         }
     }
 }
+
 </script>
 </body>
 </html>

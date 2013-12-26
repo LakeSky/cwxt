@@ -45,7 +45,7 @@ public class Excel {
         return null;
     }
 
-    public static List obtainFirstSheetAndCell(File file) throws Exception {
+    public static List obtainFirstSheetFirstColumn(File file) throws Exception {
         List list = new ArrayList();
         Workbook workBook = null;
         try {
@@ -61,6 +61,31 @@ public class Excel {
             list.add(getValue(cell));
         }
 
+        return list;
+    }
+
+    public static List<String[]> obtainFirstSheetAllColumn(File file, boolean skipFirstRow) throws Exception {
+        List<String[]> list = new ArrayList<String[]>();
+        Workbook workBook = null;
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            workBook = new XSSFWorkbook(fis);
+        } catch (Exception ex) {
+            workBook = new HSSFWorkbook(new FileInputStream(file));
+        }
+        Sheet sheet = workBook.getSheetAt(0);
+        int i = 0;
+        if (skipFirstRow) {
+            i = 1;
+        }
+        for (; i <= sheet.getLastRowNum(); i++) {
+            Row row = sheet.getRow(i);
+            String[] strs = new String[row.getLastCellNum() + 1];
+            for (int j = 0; j <= row.getLastCellNum(); j++) {
+                strs[j] = row.getCell(j) == null ? "" : row.getCell(j).toString();
+            }
+            list.add(strs);
+        }
         return list;
     }
 

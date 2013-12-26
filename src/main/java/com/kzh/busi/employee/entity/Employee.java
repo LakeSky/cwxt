@@ -1,10 +1,13 @@
 package com.kzh.busi.employee.entity;
 
 import com.kzh.generate.auto.QField;
-import com.kzh.generate.common.Date;
+import com.kzh.system.ApplicationConstant;
+import com.kzh.util.encrypt.AES;
+import com.kzh.util.encrypt.AESCoder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -16,14 +19,13 @@ public class Employee {
 
     @QField(name = "姓名", type = "text", actions = "show,query,edit", nullable = false)
     private String name;
-    @QField(name = "联系方式", type = "text", actions = "show,query,edit", nullable = false)
+    @QField(name = "联系方式", type = "text", actions = "show,query,edit")
     private String phone;
-    @QField(name = "性别", type = "dict", actions = "edit,query",
-            dictValues = {"male", "男", "femal", "女"})
+    @QField(name = "性别", type = "dict", actions = "edit,query", dictValues = {"male", "男", "femal", "女"})
     private String sex;
-    @QField(name = "身份证号", type = "text", actions = "show,query,edit")
+    @QField(name = "身份证号", type = "text", actions = "show,edit")
     private String identity_card_id;
-    @QField(name = "银行卡号", type = "text", actions = "show,query,edit")
+    @QField(name = "银行卡号", type = "text", actions = "show,edit")
     private String bank_card_id;
     @QField(name = "编制", type = "text", actions = "show,query,edit")
     private String post;
@@ -57,20 +59,24 @@ public class Employee {
         this.sex = sex;
     }
 
-    public String getIdentity_card_id() {
-        return identity_card_id;
+    public String getIdentity_card_id() throws Exception {
+        byte[] decrypt = AES.parseHexStr2Byte(identity_card_id);
+        return new String(AES.decrypt(decrypt, ApplicationConstant.encryptKey));
     }
 
-    public void setIdentity_card_id(String identity_card_id) {
-        this.identity_card_id = identity_card_id;
+    public void setIdentity_card_id(String identity_card_id) throws Exception {
+        byte[] encrypt = AES.encrypt(identity_card_id, ApplicationConstant.encryptKey);
+        this.identity_card_id = AES.parseByte2HexStr(encrypt);
     }
 
-    public String getBank_card_id() {
-        return bank_card_id;
+    public String getBank_card_id() throws Exception {
+        byte[] decrypt = AES.parseHexStr2Byte(bank_card_id);
+        return new String(AES.decrypt(decrypt, ApplicationConstant.encryptKey));
     }
 
-    public void setBank_card_id(String bank_card_id) {
-        this.bank_card_id = bank_card_id;
+    public void setBank_card_id(String bank_card_id) throws Exception {
+        byte[] encrypt = AES.encrypt(bank_card_id, ApplicationConstant.encryptKey);
+        this.bank_card_id = AES.parseByte2HexStr(encrypt);
     }
 
     public String getPost() {
@@ -94,6 +100,7 @@ public class Employee {
     }
 
     public void setRecord_date(Date record_date) {
+        record_date = new Date();
         this.record_date = record_date;
     }
 
