@@ -69,7 +69,6 @@ public class User implements UserDetails {
                 boolean accountNonLocked, Collection<GrantedAuthority> grantedAuths) {
     }
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
