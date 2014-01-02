@@ -13,6 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
+@Transactional
 public class FieldService extends BaseDao {
     //扫描所有需要自动生成页面的entity默认为entity包下面的所有类
     public static Map<String, String> entityMap = null;

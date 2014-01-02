@@ -8,6 +8,7 @@ import com.kzh.util.excel.Excel;
 import com.kzh.util.struts.BaseAction;
 import com.opensymphony.xwork2.ActionContext;
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
@@ -68,7 +69,9 @@ public class EmployeeAction extends BaseAction {
 
     public String query() throws Exception {
         Class clazz = fieldService.obtainClass(o);
-        JSONArray jsonArray = JSONArray.fromObject(fieldService.queryByHql(clazz, entityMap));
+        JsonConfig cfg = new JsonConfig();
+        cfg.setExcludes(new String[]{"handler", "hibernateLazyInitializer"});
+        JSONArray jsonArray = JSONArray.fromObject(dao.queryByHql(clazz, entityMap), cfg);
         PrintWriter.print(jsonArray.toString());
         return null;
     }
@@ -123,7 +126,7 @@ public class EmployeeAction extends BaseAction {
     }
 
     public String exportExcel() throws Exception {
-        String[] head = {"姓名", "联系方式", "性别", "身份证号", "银行卡号", "银行卡号", "职称", "入职日期", "录入时间"};
+        String[] head = {"姓名", "联系方式", "性别", "身份证号", "银行卡号", "银行卡号", "职称"};
         Employee entity = new Employee();
         List exchangedList = dao.multQuery(multiNames);
         List<String[]> contents = new ArrayList<String[]>();
@@ -138,10 +141,10 @@ public class EmployeeAction extends BaseAction {
             content[4] = exchanged.getIdentity_card_id();
             content[5] = exchanged.getBank_card_id();
             content[6] = exchanged.getPost();
-            SimpleDateFormat simDate = new SimpleDateFormat("yyyy-MM-dd");
-            content[7] = simDate.format(exchanged.getEntry_date());
-            SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            content[8] = sim.format(exchanged.getRecord_date());
+//            SimpleDateFormat simDate = new SimpleDateFormat("yyyy-MM-dd");
+//            content[7] = simDate.format(exchanged.getEntry_date());
+//            SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            content[8] = sim.format(exchanged.getRecord_date());
             contents.add(content);
         }
         HttpServletResponse response = (HttpServletResponse) ActionContext.getContext().get(ServletActionContext.HTTP_RESPONSE);
