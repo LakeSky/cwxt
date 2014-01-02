@@ -29,10 +29,10 @@ public class Employee {
     private String bank_card_id;
     @QField(name = "编制", type = "text", actions = "show,query,edit")
     private String post;
-    @QField(name = "入职日期", type = "date", actions = "show,query,edit")
-    private Date entry_date;
-    @QField(name = "录入时间", type = "time", actions = "show")
-    private Date record_date;
+//    @QField(name = "入职日期", type = "date", actions = "show,query,edit")
+//    private Date entry_date;
+//    @QField(name = "录入时间", type = "time", actions = "show")
+//    private Date record_date;
 
 
     public int getId() {
@@ -87,7 +87,7 @@ public class Employee {
         this.post = post;
     }
 
-    public Date getEntry_date() {
+    /*public Date getEntry_date() {
         return entry_date;
     }
 
@@ -102,7 +102,7 @@ public class Employee {
     public void setRecord_date(Date record_date) {
         record_date = new Date();
         this.record_date = record_date;
-    }
+    }*/
 
     public String getPhone() {
         return phone;

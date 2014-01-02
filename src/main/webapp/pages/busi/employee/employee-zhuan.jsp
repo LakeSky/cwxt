@@ -9,7 +9,7 @@
     <s:hidden name="o" id="o"/>
     <s:hidden name="jsonAllFields" id="jsonAllFields"/>
     <s:hidden name="multiNames"/>
-    <div id="tb" style="padding-top:5px;padding-left:20px;height: 10px;">
+    <div id="tb" style="padding-top:5px;padding-left:20px;height: auto;">
         <div>
             <a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导出</a>
             <s:form action="employee" method="post" enctype="multipart/form-data">
@@ -23,6 +23,7 @@
                         </td>
                         <td>
                             <s:submit method="initMultiNames" value="查询"/>
+                            <span style="color: red;">准备一个Excel第一列为姓名即可(不要添加标题)</span>
                         </td>
                     </tr>
                 </table>
