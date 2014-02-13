@@ -24,12 +24,10 @@ public class OnlineCounterListener implements HttpSessionListener {
         initChartData();
     }
 
-    @Override
     public void sessionCreated(HttpSessionEvent se) {
         increase();
     }
 
-    @Override
     public void sessionDestroyed(HttpSessionEvent se) {
         reduce();
     }

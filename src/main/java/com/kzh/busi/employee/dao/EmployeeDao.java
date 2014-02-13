@@ -5,12 +5,15 @@ import com.kzh.generate.auto.entity.FieldInfo;
 import com.kzh.generate.common.DateTime;
 import com.kzh.util.excel.Excel;
 import com.kzh.util.hibernate.BaseDao;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Table;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -161,4 +164,37 @@ public class EmployeeDao extends BaseDao {
         query.setProperties(copyMap);
         return query.list();
     }
+
+    //查询需要转存的名字是否正确
+    public List checkZhuanCunName(File file) throws Exception {
+        List<String> listNames = Excel.obtainFirstSheetColumn(file, true, 0);
+        String hql = "from Employee t where t.name not in(:names)";
+        Query query = getCurrentSession().createQuery(hql);
+        query.setParameterList("names", listNames);
+        return query.list();
+    }
+
+    public List exportZhunCunData(File file) throws Exception {
+        List<String[]> list = Excel.obtainFirstSheetAllColumn(file, true);
+        List<String> listNames = Excel.obtainFirstSheetColumn(file, true, 0);
+        String hql = "from Employee t where t.name in(:names)";
+        Query query = getCurrentSession().createQuery(hql);
+        query.setParameterList("names", listNames);
+        List<String[]> contents = new ArrayList<String[]>();
+        for (int j = 0; j < list.size(); j++) {
+            String[] listStrs = list.get(j);
+            String[] result = new String[listStrs.length + 2];
+            result[0] = listStrs[0];
+            for (int i = 1; i < listStrs.length; i++) {
+                result[i + 2] = listStrs[i];
+            }
+            if (j == 0) {
+                result[1] = "身份证号";
+                result[2] = "银行卡号";
+            }
+            contents.add(result);
+        }
+        return contents;
+    }
+
 }
