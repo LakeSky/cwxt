@@ -89,6 +89,27 @@ public class Excel {
         return list;
     }
 
+    public static List<String> obtainFirstSheetColumn(File file, boolean skipFirstRow, int columnIndex) throws Exception {
+        List<String> list = new ArrayList<String>();
+        Workbook workBook = null;
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            workBook = new XSSFWorkbook(fis);
+        } catch (Exception ex) {
+            workBook = new HSSFWorkbook(new FileInputStream(file));
+        }
+        Sheet sheet = workBook.getSheetAt(0);
+        int i = 0;
+        if (skipFirstRow) {
+            i = 1;
+        }
+        for (; i <= sheet.getLastRowNum(); i++) {
+            Row row = sheet.getRow(i);
+            list.add(row.getCell(columnIndex) == null ? "" : row.getCell(columnIndex).toString());
+        }
+        return list;
+    }
+
     private static String getValue(Cell cell) {
         if (cell.getCellType() == cell.CELL_TYPE_BOOLEAN) {
             return String.valueOf(cell.getBooleanCellValue());

@@ -42,6 +42,7 @@ public class EmployeeAction extends BaseAction {
     private String multiNames = "";
     private File queryExcel;
     private File importExcel;
+    private File zhuanCunExcel;
 
     @Action(value = "save", interceptorRefs = {@InterceptorRef("token"), @InterceptorRef("tokenSession")})
     public String save() throws Exception {
@@ -99,6 +100,27 @@ public class EmployeeAction extends BaseAction {
         return "zhuan";
     }
 
+    //转存导出
+    public String zhuanCunExport() {
+        return "zhuanExport";
+    }
+
+    public String zhuanCunExportExcel() {
+        try {
+            List misMatchingNames = dao.checkZhuanCunName(zhuanCunExcel);
+            if (misMatchingNames.size() > 0) {
+                PrintWriter.printListWithJson(misMatchingNames);
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            PrintWriter.print("程序卖萌了，快联系木头吧");
+            return null;
+        }
+
+        return "zhuanExport";
+    }
+
     public String initMultiNames() throws Exception {
         Class clazz = fieldService.obtainClass(o);
         listAllFields = fieldService.obtainAllFields(clazz);
@@ -127,7 +149,6 @@ public class EmployeeAction extends BaseAction {
 
     public String exportExcel() throws Exception {
         String[] head = {"姓名", "联系方式", "性别", "身份证号", "银行卡号", "银行卡号", "职称"};
-        Employee entity = new Employee();
         List exchangedList = dao.multQuery(multiNames);
         List<String[]> contents = new ArrayList<String[]>();
         contents.add(head);
@@ -157,6 +178,13 @@ public class EmployeeAction extends BaseAction {
         response.sendRedirect("download.do?fileName=" + fileName);
         return SUCCESS;
     }
+
+    public String exportZhunCunData() throws Exception {
+        String fileName = Excel.simpleExportExcel(dao.exportZhunCunData(zhuanCunExcel));
+        getResponse().sendRedirect("download.do?fileName=" + fileName);
+        return SUCCESS;
+    }
+
 
     public String importEmployee() {
         listAllFields = fieldService.obtainAllFields(Employee.class);
@@ -256,5 +284,13 @@ public class EmployeeAction extends BaseAction {
 
     public void setImportExcel(File importExcel) {
         this.importExcel = importExcel;
+    }
+
+    public File getZhuanCunExcel() {
+        return zhuanCunExcel;
+    }
+
+    public void setZhuanCunExcel(File zhuanCunExcel) {
+        this.zhuanCunExcel = zhuanCunExcel;
     }
 }
