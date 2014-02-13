@@ -176,19 +176,24 @@ public class EmployeeDao extends BaseDao {
 
     public List exportZhunCunData(File file) throws Exception {
         List<String[]> list = Excel.obtainFirstSheetAllColumn(file, true);
-        List<String> listNames = Excel.obtainFirstSheetColumn(file, true, 0);
+        List<String> listNames = Excel.obtainFirstSheetColumn(file, false, 0);
         String hql = "from Employee t where t.name in(:names)";
         Query query = getCurrentSession().createQuery(hql);
         query.setParameterList("names", listNames);
+        List employyees = query.list();
         List<String[]> contents = new ArrayList<String[]>();
         for (int j = 0; j < list.size(); j++) {
+            Employee employee = (Employee) employyees.get(j);
             String[] listStrs = list.get(j);
             String[] result = new String[listStrs.length + 2];
             result[0] = listStrs[0];
             for (int i = 1; i < listStrs.length; i++) {
                 result[i + 2] = listStrs[i];
             }
-            if (j == 0) {
+            if (j != 0) {
+                result[1] = employee.getIdentity_card_id();
+                result[2] = employee.getBank_card_id();
+            } else {
                 result[1] = "身份证号";
                 result[2] = "银行卡号";
             }
