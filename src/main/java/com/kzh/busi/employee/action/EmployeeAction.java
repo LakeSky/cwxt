@@ -8,6 +8,7 @@ import com.kzh.util.excel.Excel;
 import com.kzh.util.struts.BaseAction;
 import com.opensymphony.xwork2.ActionContext;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -37,6 +38,7 @@ public class EmployeeAction extends BaseAction {
 
     private String o = "Employee";
     private Map entityMap;
+    private Map exportEntityMap;
     private String delIds;
     private String idField;
     private String multiNames = "";
@@ -105,22 +107,6 @@ public class EmployeeAction extends BaseAction {
         return "zhuanExport";
     }
 
-    public String zhuanCunExportExcel() {
-        try {
-            List misMatchingNames = dao.checkZhuanCunName(zhuanCunExcel);
-            if (misMatchingNames.size() > 0) {
-                PrintWriter.printListWithJson(misMatchingNames);
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            PrintWriter.print("程序卖萌了，快联系木头吧");
-            return null;
-        }
-
-        return "zhuanExport";
-    }
-
     public String initMultiNames() throws Exception {
         Class clazz = fieldService.obtainClass(o);
         listAllFields = fieldService.obtainAllFields(clazz);
@@ -148,8 +134,10 @@ public class EmployeeAction extends BaseAction {
     }
 
     public String exportExcel() throws Exception {
-        String[] head = {"姓名", "联系方式", "性别", "身份证号", "银行卡号", "银行卡号", "职称"};
-        List exchangedList = dao.multQuery(multiNames);
+        //String[] head = {"姓名", "联系方式", "性别", "身份证号", "银行卡号", "银行卡号", "职称"};
+        String[] head = {"姓名", "身份证号", "银行卡号"};
+        Class clazz = fieldService.obtainClass(o);
+        List exchangedList = dao.queryByHqlForExport(clazz, exportEntityMap);
         List<String[]> contents = new ArrayList<String[]>();
         contents.add(head);
         String[] content;
@@ -157,29 +145,29 @@ public class EmployeeAction extends BaseAction {
             Employee exchanged = (Employee) exchangedList.get(i);
             content = new String[head.length];
             content[0] = exchanged.getName();
-            content[1] = exchanged.getPhone();
-            content[2] = exchanged.getSex();
-            content[4] = exchanged.getIdentity_card_id();
-            content[5] = exchanged.getBank_card_id();
-            content[6] = exchanged.getPost();
-//            SimpleDateFormat simDate = new SimpleDateFormat("yyyy-MM-dd");
-//            content[7] = simDate.format(exchanged.getEntry_date());
-//            SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            content[8] = sim.format(exchanged.getRecord_date());
+            content[1] = exchanged.getIdentity_card_id();
+            content[2] = exchanged.getBank_card_id();
             contents.add(content);
         }
-        HttpServletResponse response = (HttpServletResponse) ActionContext.getContext().get(ServletActionContext.HTTP_RESPONSE);
-//        HttpServletRequest request = (HttpServletRequest) ActionContext.getContext().get(ServletActionContext.HTTP_REQUEST);
         String fileName = Excel.simpleExportExcel(contents);
-        /*String path = request.getContextPath();
-        String basePath = request.getScheme() + "://"
-                + request.getServerName() + ":" + request.getServerPort()
-                + path + "/";*/
-        response.sendRedirect("download.do?fileName=" + fileName);
-        return SUCCESS;
+        getResponse().sendRedirect("download.do?fileName=" + fileName);
+        return null;
     }
 
+    //导出转存的数据
     public String exportZhunCunData() throws Exception {
+        try {
+            List misMatchingNames = dao.checkZhuanCunName(zhuanCunExcel);
+            if (misMatchingNames.size() > 0) {
+                PrintWriter.printListWithJsonAppendHtml(misMatchingNames,
+                        "<br/><div style='color:red;margin-top:10px;'>提示：上面的名字有错误请更正后重新上传</div>");
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            PrintWriter.print("<div style='color:red;'>程序卖萌了，快联系木头吧</div>");
+            return null;
+        }
         String fileName = Excel.simpleExportExcel(dao.exportZhunCunData(zhuanCunExcel));
         getResponse().sendRedirect("download.do?fileName=" + fileName);
         return SUCCESS;
@@ -292,5 +280,15 @@ public class EmployeeAction extends BaseAction {
 
     public void setZhuanCunExcel(File zhuanCunExcel) {
         this.zhuanCunExcel = zhuanCunExcel;
+    }
+
+    public Map getExportEntityMap() {
+        return exportEntityMap;
+    }
+
+    public void setExportEntityMap(String exportEntityMap) {
+        JSONObject jsonObject = JSONObject.fromObject(exportEntityMap);
+//        jsonObject.putAll(this.exportEntityMap);
+        this.exportEntityMap = jsonObject;
     }
 }

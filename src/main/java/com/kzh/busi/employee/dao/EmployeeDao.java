@@ -9,6 +9,7 @@ import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -126,6 +127,9 @@ public class EmployeeDao extends BaseDao {
         while (it.hasNext()) {
             String str = (String) it.next();
             String[] strs = (String[]) map.get(str);
+            if (str.equals("name")) {
+                strs[0] = "%" + strs[0] + "%";
+            }
             Class typeClass;
             if (str.startsWith("HHHHHHstart_") || str.startsWith("HHHHHHend_")) {
                 typeClass = clazz.getDeclaredField(str.substring(str.indexOf("_") + 1)).getType();
@@ -156,7 +160,64 @@ public class EmployeeDao extends BaseDao {
                     }
                 }
                 if (typeClass.equals(String.class)) {
+                    hql += " and t." + str + " like :" + str;
+                }
+            }
+        }
+        Query query = getCurrentSession().createQuery(hql);
+        query.setProperties(copyMap);
+        return query.list();
+    }
+
+    //员工信息查询里面的导出(单独使用)
+    public List queryByHqlForExport(Class clazz, Map map) throws Exception {
+        Map copyMap = new HashMap();
+        if (map == null) {
+            map = new HashMap();
+        }
+        copyMap.putAll(map);
+        String hql = "from Employee t where 1=1";
+        Set keyset = map.keySet();
+        Iterator it = keyset.iterator();
+        while (it.hasNext()) {
+            String str = (String) it.next();
+            String strs = (String) map.get(str);
+            if (str.equals("name")) {
+                strs = "%" + strs + "%";
+                copyMap.remove(str);
+                copyMap.put(str, strs);
+            }
+            Class typeClass;
+            if (str.startsWith("HHHHHHstart_") || str.startsWith("HHHHHHend_")) {
+                typeClass = clazz.getDeclaredField(str.substring(str.indexOf("_") + 1)).getType();
+                if (StringUtils.isNotBlank(strs)) {
+                    copyMap.remove(str);
+                    DateTime dateTime = clazz.getDeclaredField(str.substring(str.indexOf("_") + 1)).getAnnotation(DateTime.class);
+                    SimpleDateFormat sim;
+                    if (dateTime != null) {
+                        sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    } else {
+                        sim = new SimpleDateFormat("yyyy-MM-dd");
+                    }
+                    copyMap.put(str, sim.parse(strs));
+                }
+            } else {
+                typeClass = clazz.getDeclaredField(str).getType();
+            }
+            if (StringUtils.isNotBlank(strs)) {
+                if (typeClass.equals(int.class)) {
                     hql += " and t." + str + "=:" + str;
+                }
+                if (typeClass.equals(Date.class)) {
+                    if (str.startsWith("HHHHHHstart_")) {
+                        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+                        hql += " and t." + str.substring(str.indexOf("_") + 1) + " >=:" + str;
+                    } else {
+                        hql += " and t." + str.substring(str.indexOf("_") + 1) + " <=:" + str;
+                    }
+                }
+                if (typeClass.equals(String.class)) {
+                    hql += " and t." + str + " like :" + str;
                 }
             }
         }
@@ -168,23 +229,30 @@ public class EmployeeDao extends BaseDao {
     //查询需要转存的名字是否正确
     public List checkZhuanCunName(File file) throws Exception {
         List<String> listNames = Excel.obtainFirstSheetColumn(file, true, 0);
-        String hql = "from Employee t where t.name not in(:names)";
+        String hql = "select name from Employee t where t.name in(:names)";
         Query query = getCurrentSession().createQuery(hql);
         query.setParameterList("names", listNames);
-        return query.list();
+        List haveNames = query.list();
+        List result = new ArrayList();
+        for (String str : listNames) {
+            if (!haveNames.contains(str)) {
+                result.add(str);
+            }
+        }
+        return result;
     }
 
     public List exportZhunCunData(File file) throws Exception {
-        List<String[]> list = Excel.obtainFirstSheetAllColumn(file, true);
-        List<String> listNames = Excel.obtainFirstSheetColumn(file, false, 0);
+        List<String[]> list = Excel.obtainFirstSheetAllColumn(file, false);
+        List<String> listNames = Excel.obtainFirstSheetColumn(file, true, 0);
         String hql = "from Employee t where t.name in(:names)";
         Query query = getCurrentSession().createQuery(hql);
         query.setParameterList("names", listNames);
-        List employyees = query.list();
+        List<Employee> employyees = query.list();
         List<String[]> contents = new ArrayList<String[]>();
         for (int j = 0; j < list.size(); j++) {
-            Employee employee = (Employee) employyees.get(j);
             String[] listStrs = list.get(j);
+            Employee employee = obtainEmployByName(employyees, listStrs[0].trim());
             String[] result = new String[listStrs.length + 2];
             result[0] = listStrs[0];
             for (int i = 1; i < listStrs.length; i++) {
@@ -200,6 +268,15 @@ public class EmployeeDao extends BaseDao {
             contents.add(result);
         }
         return contents;
+    }
+
+    private Employee obtainEmployByName(List<Employee> employees, String name) {
+        for (Employee employee : employees) {
+            if (employee.getName().equals(name)) {
+                return employee;
+            }
+        }
+        return null;
     }
 
 }
