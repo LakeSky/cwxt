@@ -8,13 +8,16 @@
     <s:hidden name="delIds" id="delIds"/>
     <s:hidden name="o" id="o"/>
     <s:hidden name="jsonAllFields" id="jsonAllFields"/>
+    <s:form id="exportForm" action="employee!exportExcel.do" method="post">
+        <s:hidden name="exportEntityMap" id="exportEntityMap"/>
+    </s:form>
     <div id="tb" style="padding-top:5px;padding-left:20px;height:auto;">
         <div style="margin-bottom:5px">
             <a href="#" onclick="add()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
             <a href="#" onclick="edit();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">编辑</a>
             <a href="#" onclick="del();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
             <a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导出</a>
-            <a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导入</a>
+            <%--<a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导入</a>--%>
             <a href="#" onclick="test();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">测试</a>
             <a href="#" onclick="showDefinePanel();" class="easyui-linkbutton" iconCls="icon-tip" plain="true">
                 <span id="definePanelControl">显示自定义面板</span>
@@ -417,7 +420,9 @@ function del() {
 }
 
 function exportExcel() {
-
+    var form = $("#exportForm");
+    document.getElementById("exportEntityMap").value = initQueryDataWithJsonForPost();
+    form.submit();
 }
 
 function importExcel() {
@@ -484,6 +489,45 @@ function initQueryDataWithJson() {
         }
     }
     var field = eval("({" + aa.substr(0, aa.length - 1) + "})");
+    return field;
+}
+
+function initQueryDataWithJsonForPost() {
+    var jsonFieldNames = eval($('#jsonAllFields').val());
+    var aa = "";
+    for (var i = 0; i < jsonFieldNames.length; i++) {
+        var actions = jsonFieldNames[i].actions;
+        if (actions.indexOf("query") != -1) {
+            var type = jsonFieldNames[i].type;
+            var val = "";
+            if (type == "date") {
+                var valStart = $("#query_start_" + jsonFieldNames[i].name).datebox('getValue');
+                var valEnd = $("#query_end_" + jsonFieldNames[i].name).datebox('getValue');
+                if ($.trim(valStart) == "" && $.trim(valEnd) == "") {
+                    continue;
+                }
+                aa += "'HHHHHHstart_" + jsonFieldNames[i].name + "':'" + valStart + "',";
+                aa += "'HHHHHHend_" + jsonFieldNames[i].name + "':'" + valEnd + "',";
+            }
+            else if (type == "time") {
+                var valStart = $("#query_start_" + jsonFieldNames[i].name).datetimebox('getValue');
+                var valEnd = $("#query_end_" + jsonFieldNames[i].name).datetimebox('getValue');
+                if ($.trim(valStart) == "" && $.trim(valEnd) == "") {
+                    continue;
+                }
+                aa += "'HHHHHHstart_" + jsonFieldNames[i].name + "':'" + valStart + "',";
+                aa += "'HHHHHHend_" + jsonFieldNames[i].name + "':'" + valEnd + "',";
+            }
+            else {
+                val = $("#query_" + jsonFieldNames[i].name).val();
+                if ($.trim(val) == "") {
+                    continue;
+                }
+                aa += "'" + jsonFieldNames[i].name + "':'" + val + "',";
+            }
+        }
+    }
+    var field = "{" + aa.substr(0, aa.length - 1) + "}";
     return field;
 }
 

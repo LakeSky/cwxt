@@ -15,7 +15,7 @@
                         <s:file id="zhuanCunExcel" name="zhuanCunExcel"></s:file>
                     </td>
                     <td>
-                        <s:submit method="exportZhunCunData" onclick="return checkName();" value="导出"/>
+                        <s:submit method="exportZhunCunData" value="导出"/>
                     </td>
                 </tr>
             </table>
@@ -32,19 +32,7 @@
 </body>
 <script type="text/javascript">
     function checkName() {
-        $.ajax({
-            type: "POST",
-            url: "register!confirmYzm.do?random=" + Math.random(),
-            data: {"user.phone": phone, "user.yzm": yzm},
-            async: false,
-            success: function (data) {
-                var yzmResult = eval('(' + data + ')');
-                alert(yzmResult["retCode"]);
-                if (yzmResult["retCode"] == "ok") {
-                    confirmYzm = true;
-                }
-            }
-        });
+
     }
 </script>
 </html>

@@ -33,8 +33,8 @@ public class Excel {
         }
         try {
             SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
-            String filePath = ApplicationConstant.TempFilePath + "exchangeInfo" + sim.format(new Date()) + ".xls";
-            String fileName = "exchangeInfo" + sim.format(new Date()) + ".xls";
+            String filePath = ApplicationConstant.TempFilePath + "export" + sim.format(new Date()) + ".xls";
+            String fileName = "export" + sim.format(new Date()) + ".xls";
             FileOutputStream fs = new FileOutputStream(filePath);
             wb.write(fs);
             fs.close();
@@ -119,6 +119,4 @@ public class Excel {
             return String.valueOf(cell.getStringCellValue());
         }
     }
-
-
 }
