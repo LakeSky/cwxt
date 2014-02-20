@@ -149,7 +149,7 @@ public class EmployeeAction extends BaseAction {
             content[2] = exchanged.getBank_card_id();
             contents.add(content);
         }
-        String fileName = Excel.simpleExportExcel(contents);
+        String fileName = Excel.simpleExportExcel("export", contents, new int[]{10, 20, 30});
         getResponse().sendRedirect("download.do?fileName=" + fileName);
         return null;
     }
@@ -164,11 +164,11 @@ public class EmployeeAction extends BaseAction {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
             PrintWriter.print("<div style='color:red;'>程序卖萌了，快联系木头吧</div>");
             return null;
         }
-        String fileName = Excel.simpleExportExcel(dao.exportZhunCunData(zhuanCunExcel));
+        String fileName = Excel.simpleExportExcel("export", dao.exportZhunCunData(zhuanCunExcel), new int[]{10, 20, 30});
         getResponse().sendRedirect("download.do?fileName=" + fileName);
         return SUCCESS;
     }

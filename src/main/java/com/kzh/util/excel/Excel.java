@@ -45,6 +45,36 @@ public class Excel {
         return null;
     }
 
+    public static String simpleExportExcel(String name, List<String[]> list, int[] columnWidth) {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet();
+        HSSFRow row;
+        HSSFCell cell;
+        for (int i = 0; i < columnWidth.length; i++) {
+            sheet.setColumnWidth(i, columnWidth[i] * 256);
+        }
+        for (int i = 0; i < list.size(); i++) {
+            row = sheet.createRow(i);
+            String[] strs = list.get(i);
+            for (int j = 0; j < strs.length; j++) {
+                cell = row.createCell(j);
+                cell.setCellValue(strs[j]);
+            }
+        }
+        try {
+            SimpleDateFormat sim = new SimpleDateFormat("yy-MM-dd-HHmmss");
+            String filePath = ApplicationConstant.TempFilePath + name + sim.format(new Date()) + ".xls";
+            String fileName = "export" + sim.format(new Date()) + ".xls";
+            FileOutputStream fs = new FileOutputStream(filePath);
+            wb.write(fs);
+            fs.close();
+            return fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static List obtainFirstSheetFirstColumn(File file) throws Exception {
         List list = new ArrayList();
         Workbook workBook = null;
