@@ -4,6 +4,7 @@ import com.kzh.generate.auto.QField;
 import com.kzh.system.ApplicationConstant;
 import com.kzh.util.encrypt.AES;
 import com.kzh.util.encrypt.AESCoder;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -66,8 +67,10 @@ public class Employee {
     }
 
     public void setIdentity_card_id(String identity_card_id) throws Exception {
-        byte[] encrypt = AES.encrypt(identity_card_id, ApplicationConstant.encryptKey);
-        this.identity_card_id = AES.parseByte2HexStr(encrypt);
+        if (StringUtils.isNotBlank(identity_card_id)) {
+            byte[] encrypt = AES.encrypt(identity_card_id.trim(), ApplicationConstant.encryptKey);
+            this.identity_card_id = AES.parseByte2HexStr(encrypt);
+        }
     }
 
     public String getBank_card_id() throws Exception {
@@ -76,8 +79,10 @@ public class Employee {
     }
 
     public void setBank_card_id(String bank_card_id) throws Exception {
-        byte[] encrypt = AES.encrypt(bank_card_id, ApplicationConstant.encryptKey);
-        this.bank_card_id = AES.parseByte2HexStr(encrypt);
+        if (StringUtils.isNotBlank(identity_card_id)) {
+            byte[] encrypt = AES.encrypt(bank_card_id.trim(), ApplicationConstant.encryptKey);
+            this.bank_card_id = AES.parseByte2HexStr(encrypt);
+        }
     }
 
     public String getPost() {
