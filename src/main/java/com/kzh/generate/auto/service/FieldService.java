@@ -29,6 +29,7 @@ public class FieldService extends BaseDao {
     //扫描所有需要自动生成页面的entity默认为entity包下面的所有类
     public static Map<String, String> entityMap = null;
 
+    //取得所有标注有QField标注的字段并获得响应的字段信息
     public List obtainAllFields(Class clazz) {
         List list = new ArrayList();
         Field[] fields = clazz.getDeclaredFields();
@@ -41,40 +42,39 @@ public class FieldService extends BaseDao {
                 fieldInfo.setType(qField.type());
                 fieldInfo.setNullable(qField.nullable());
                 fieldInfo.setActions(qField.actions());
-                if (qField != null) {
-                    if (qField.type().equals("textarea")) {
-                        fieldInfo.setLength(qField.textareaLength());
-                    }
-                    if (qField.type().equals("date")) {
-                        fieldInfo.setDateFormat(qField.dateFormat());
-                    }
-                    if (qField.type().equals("time")) {
-                        fieldInfo.setTimeFormat(qField.timeFormat());
-                    }
-                    if (qField.type().equals("dict")) {
-                        Map map = new LinkedHashMap();
-                        map.put("", "");
-                        if (qField.dictType().equals("static")) {
-                            String[] strs = qField.dictValues();
-                            for (int i = 0; i < strs.length; i += 2) {
-                                map.put(strs[i], strs[i + 1]);
-                            }
-                        }
-                        if (qField.dictType().equals("dynamic")) {
-                            List dictList = getCurrentSession().createSQLQuery(qField.dictValues()[0]).list();
-                            for (int i = 0; i < dictList.size(); i++) {
-                                Object[] strs = (Object[]) dictList.get(i);
-                                if (strs[0] == null || strs[1] == null) {
-                                    continue;
-                                }
-                                map.put(strs[0].toString(), strs[1].toString());
-                            }
-                        }
-                        fieldInfo.setMap(map);
-                    }
 
-                    list.add(fieldInfo);
+                if (qField.type().equals("textarea")) {
+                    fieldInfo.setLength(qField.textareaLength());
                 }
+                if (qField.type().equals("date")) {
+                    fieldInfo.setDateFormat(qField.dateFormat());
+                }
+                if (qField.type().equals("time")) {
+                    fieldInfo.setTimeFormat(qField.timeFormat());
+                }
+                if (qField.type().equals("dict")) {
+                    Map map = new LinkedHashMap();
+                    map.put("", "");
+                    if (qField.dictType().equals("static")) {
+                        String[] strs = qField.dictValues();
+                        for (int i = 0; i < strs.length; i += 2) {
+                            map.put(strs[i], strs[i + 1]);
+                        }
+                    }
+                    if (qField.dictType().equals("dynamic")) {
+                        List dictList = getCurrentSession().createSQLQuery(qField.dictValues()[0]).list();
+                        for (int i = 0; i < dictList.size(); i++) {
+                            Object[] strs = (Object[]) dictList.get(i);
+                            if (strs[0] == null || strs[1] == null) {
+                                continue;
+                            }
+                            map.put(strs[0].toString(), strs[1].toString());
+                        }
+                    }
+                    fieldInfo.setMap(map);
+                }
+
+                list.add(fieldInfo);
             }
         }
         return list;

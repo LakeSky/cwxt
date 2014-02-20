@@ -7,7 +7,12 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 public class Program {
     public static void main(String[] args) throws Exception {
-        MyTest test = new MyTest();
-        test.scanEntitys();
+
+        Program program = new Program();
+        program.display();
+    }
+
+    public void display() {
+        System.out.println(this.getClass().getResource("/"));
     }
 }
