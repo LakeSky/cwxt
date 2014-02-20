@@ -1,5 +1,7 @@
 package com.kzh;
 
+import com.kzh.system.ApplicationConstant;
+import com.kzh.util.encrypt.AES;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -61,5 +63,15 @@ public class Tester {
         JSONArray jsonArray = JSONArray.fromObject(list);
 //        jsonObject.put("result", list);
 //        System.out.println(jsonArray.toString(""));
+    }
+
+    @Test
+    public void testDecrypt() {
+        byte[] encrypt = AES.encrypt("320584195810090012", ApplicationConstant.encryptKey);
+        System.out.println(AES.parseByte2HexStr(encrypt));
+
+        byte[] decrypt = AES.parseHexStr2Byte("EADC5E6C04770A6AB1F6960E5D3B55D3FE58658BEFB29830E1F93B75E3A26B6C");
+        String str = new String(AES.decrypt(decrypt, ApplicationConstant.encryptKey));
+        System.out.println(str);
     }
 }
