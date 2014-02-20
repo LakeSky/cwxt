@@ -64,6 +64,9 @@ public class FieldService extends BaseDao {
                             List dictList = getCurrentSession().createSQLQuery(qField.dictValues()[0]).list();
                             for (int i = 0; i < dictList.size(); i++) {
                                 Object[] strs = (Object[]) dictList.get(i);
+                                if (strs[0] == null || strs[1] == null) {
+                                    continue;
+                                }
                                 map.put(strs[0].toString(), strs[1].toString());
                             }
                         }

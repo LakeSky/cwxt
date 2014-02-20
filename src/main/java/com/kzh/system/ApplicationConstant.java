@@ -11,7 +11,8 @@ public class ApplicationConstant {
     //临时文件位置
 //    public static final String TempFilePath = "C:\\movie\\temp\\";
 //    public static final String TempFilePath = "D:\\temp\\";
-    public static final String TempFilePath = "D:\\aaa\\";
+//    public static final String TempFilePath = "D:\\aaa\\";
+    public static final String TempFilePath = "/";
     public static final String encryptKey = "TIfC0z6v29VHLatvYkRs5A==";
 
 }

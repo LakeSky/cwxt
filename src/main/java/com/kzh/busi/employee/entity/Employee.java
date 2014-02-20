@@ -27,7 +27,8 @@ public class Employee {
     private String identity_card_id;
     @QField(name = "银行卡号", type = "text", actions = "show,edit")
     private String bank_card_id;
-    @QField(name = "编制", type = "text", actions = "show,query,edit")
+    @QField(name = "编制", type = "dict", actions = "show,query,edit", dictType = "dynamic",
+            dictValues = {"select distinct post,post from Employee"})
     private String post;
 //    @QField(name = "入职日期", type = "date", actions = "show,query,edit")
 //    private Date entry_date;
