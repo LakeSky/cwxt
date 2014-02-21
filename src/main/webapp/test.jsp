@@ -11,8 +11,6 @@
     <title></title>
 </head>
 <body>
-    <%
-        String path =request.getServletPath() getServletContext().getRealPath("/");
-    %>
+${classpath}
 </body>
 </html>

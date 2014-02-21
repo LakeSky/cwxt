@@ -43,6 +43,11 @@
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
                 <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.c3p0.min_size">3</prop>
+                <prop key="hibernate.c3p0.max_size">100</prop>
+                <prop key="hibernate.c3p0.timeout">5000</prop>
+                <prop key="hibernate.c3p0.idle_test_period">120</prop>
+                <prop key="hibernate.c3p0.max_statements">1000</prop>
             </props>
         </property>
     </bean>

@@ -14,5 +14,6 @@ public class ApplicationConstant {
 //    public static final String TempFilePath = "D:\\aaa\\";
     public static final String TempFilePath = "/";
     public static final String encryptKey = "TIfC0z6v29VHLatvYkRs5A==";
+    public static final String classpath = "";
 
 }

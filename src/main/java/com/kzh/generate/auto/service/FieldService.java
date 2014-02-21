@@ -160,7 +160,7 @@ public class FieldService extends BaseDao {
                     }
                 }
                 if (typeClass.equals(String.class)) {
-                    method.invoke(o, strs[0]);
+                    method.invoke(o, strs[0].trim());
                 }
             }
         }

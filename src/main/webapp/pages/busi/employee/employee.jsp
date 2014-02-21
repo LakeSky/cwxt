@@ -18,7 +18,7 @@
             <a href="#" onclick="del();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
             <a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导出</a>
             <%--<a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导入</a>--%>
-            <a href="#" onclick="test();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">测试</a>
+            <%--<a href="#" onclick="test();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">测试</a>--%>
             <a href="#" onclick="showDefinePanel();" class="easyui-linkbutton" iconCls="icon-tip" plain="true">
                 <span id="definePanelControl">显示自定义面板</span>
             </a>
@@ -199,22 +199,23 @@ $(function () {
 });
 
 function test() {
-    var arr = [];
-    var jsonFieldNames = eval($('#jsonEditFields').val());
-    var aa = "";
-    for (var i = 0; i < jsonFieldNames.length; i++) {
-        var type = jsonFieldNames[i].type;
-        var val = "";
-        if (type == "Date") {
-            val = $("#" + jsonFieldNames[i].name).datebox('getValue');
-        }
-        else {
-            val = $("#" + jsonFieldNames[i].name).val();
-        }
-        aa += "'entityMap." + jsonFieldNames[i].name + "':'" + val + "',";
-        arr.push("'entityMap.'" + jsonFieldNames[i].name + "':" + val);
-    }
-    return arr;
+    alert("测试用");
+    /*var arr = [];
+     var jsonFieldNames = eval($('#jsonEditFields').val());
+     var aa = "";
+     for (var i = 0; i < jsonFieldNames.length; i++) {
+     var type = jsonFieldNames[i].type;
+     var val = "";
+     if (type == "Date") {
+     val = $("#" + jsonFieldNames[i].name).datebox('getValue');
+     }
+     else {
+     val = $("#" + jsonFieldNames[i].name).val();
+     }
+     aa += "'entityMap." + jsonFieldNames[i].name + "':'" + val + "',";
+     arr.push("'entityMap.'" + jsonFieldNames[i].name + "':" + val);
+     }
+     return arr;*/
 }
 
 function add() {

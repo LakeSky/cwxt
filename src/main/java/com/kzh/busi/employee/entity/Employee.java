@@ -31,6 +31,10 @@ public class Employee {
     @QField(name = "编制", type = "dict", actions = "show,query,edit", dictType = "dynamic",
             dictValues = {"select distinct post,post from Employee"})
     private String post;
+    @QField(name = "工作状态", type = "dict", actions = "show,edit,query", dictValues = {"在职", "在职", "退休", "退休"})
+    private String work_state;
+    @QField(name = "临工or正式", type = "dict", actions = "show,edit,query", dictValues = {"临工", "临工", "正式", "正式"})
+    private String temporary_worker;
 //    @QField(name = "入职日期", type = "date", actions = "show,query,edit")
 //    private Date entry_date;
 //    @QField(name = "录入时间", type = "time", actions = "show")
@@ -79,7 +83,7 @@ public class Employee {
     }
 
     public void setBank_card_id(String bank_card_id) throws Exception {
-        if (StringUtils.isNotBlank(identity_card_id)) {
+        if (StringUtils.isNotBlank(bank_card_id)) {
             byte[] encrypt = AES.encrypt(bank_card_id.trim(), ApplicationConstant.encryptKey);
             this.bank_card_id = AES.parseByte2HexStr(encrypt);
         }
@@ -116,5 +120,21 @@ public class Employee {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getWork_state() {
+        return work_state;
+    }
+
+    public void setWork_state(String work_state) {
+        this.work_state = work_state;
+    }
+
+    public String getTemporary_worker() {
+        return temporary_worker;
+    }
+
+    public void setTemporary_worker(String temporary_worker) {
+        this.temporary_worker = temporary_worker;
     }
 }

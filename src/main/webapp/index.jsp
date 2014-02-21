@@ -68,8 +68,9 @@
 
     //如果用户没有关闭该页面就，则定时发送请求，维护连接
     function intervalConnect() {
-        $.get("component/connect.html?ran=" + Math.random());
-        setTimeout('intervalConnect()', 1000 * 5 * 60);
+        //$.get("component/connect.html?ran=" + Math.random());
+        $.get("sustain.do?ran=" + Math.random());
+        setTimeout('intervalConnect()', 1000 * 1 * 60);
     }
 
 </script>
