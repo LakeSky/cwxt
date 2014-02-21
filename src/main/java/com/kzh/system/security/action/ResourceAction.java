@@ -37,6 +37,7 @@ public class ResourceAction extends BaseAction {
     //当权限关系发生改变的时候重新加载资源权限对应关系
     public String updateResourceMap() {
         MySecurityMetadataSource.resourceMap = service.findAll();
+        PrintWriter.print("更新成功");
         return SUCCESS;
     }
 
