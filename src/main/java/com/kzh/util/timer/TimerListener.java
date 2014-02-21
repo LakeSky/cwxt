@@ -15,7 +15,6 @@ public class TimerListener implements ServletContextListener {
     private Timer timer;
     private QTask task;
 
-    @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         timer = new java.util.Timer(true);
         task = new QTask(servletContextEvent.getServletContext());
@@ -25,7 +24,6 @@ public class TimerListener implements ServletContextListener {
 
     }
 
-    @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         timer.cancel();
         System.out.println("定时器已销毁");

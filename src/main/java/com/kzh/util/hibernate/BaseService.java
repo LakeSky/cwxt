@@ -14,6 +14,12 @@ public class BaseService<T> {
         baseDao.save(t);
     }
 
+    //通过执行简单的sql语句来维持数据库的持久连接
+    public void sustainDatabaseConnection() {
+        String sql = "select * from Test";
+        baseDao.getCurrentSession().createSQLQuery(sql).list();
+    }
+
     //-------------get/set---------------------------
     public BaseDao getBaseDao() {
         return baseDao;
