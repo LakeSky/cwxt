@@ -8,7 +8,7 @@
     <s:hidden name="delIds" id="delIds"/>
     <s:hidden name="o" id="o"/>
     <s:hidden name="jsonAllFields" id="jsonAllFields"/>
-    <s:form id="exportForm" action="employee!exportExcel.do" method="post">
+    <s:form id="exportForm" action="" method="post">
         <s:hidden name="exportEntityMap" id="exportEntityMap"/>
     </s:form>
     <div id="tb" style="padding-top:5px;padding-left:20px;height:auto;">
@@ -16,7 +16,8 @@
             <a href="#" onclick="add()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
             <a href="#" onclick="edit();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">编辑</a>
             <a href="#" onclick="del();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
-            <a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导出</a>
+            <a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">仅导出名字|身份证|银行卡号</a>
+            <a href="#" onclick="exportExcelAllField();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导出全部字段</a>
             <%--<a href="#" onclick="exportExcel();" class="easyui-linkbutton" iconCls="icon-redo" plain="true">导入</a>--%>
             <%--<a href="#" onclick="test();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">测试</a>--%>
             <a href="#" onclick="showDefinePanel();" class="easyui-linkbutton" iconCls="icon-tip" plain="true">
@@ -422,6 +423,14 @@ function del() {
 
 function exportExcel() {
     var form = $("#exportForm");
+    form.attr("action", "employee!exportExcel.do");
+    document.getElementById("exportEntityMap").value = initQueryDataWithJsonForPost();
+    form.submit();
+}
+
+function exportExcelAllField() {
+    var form = $("#exportForm");
+    form.attr("action", "employee!exportExcelAllField.do");
     document.getElementById("exportEntityMap").value = initQueryDataWithJsonForPost();
     form.submit();
 }

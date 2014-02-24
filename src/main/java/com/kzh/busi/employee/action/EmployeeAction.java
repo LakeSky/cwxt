@@ -2,6 +2,7 @@ package com.kzh.busi.employee.action;
 
 import com.kzh.busi.employee.dao.EmployeeDao;
 import com.kzh.busi.employee.entity.Employee;
+import com.kzh.generate.auto.entity.FieldInfo;
 import com.kzh.generate.auto.service.FieldService;
 import com.kzh.util.PrintWriter;
 import com.kzh.util.excel.Excel;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +132,32 @@ public class EmployeeAction extends BaseAction {
     public String multQuery() throws Exception {
         JSONArray jsonArray = JSONArray.fromObject(dao.multQuery(multiNames));
         PrintWriter.print(jsonArray.toString());
+        return null;
+    }
+
+    public String exportExcelAllField() throws Exception {
+        List<String[]> contents = new ArrayList<String[]>();
+        Class clazz = fieldService.obtainClass(o);
+        List<FieldInfo> fields = fieldService.obtainAllFields(clazz);
+        List exchangedList = dao.queryByHqlForExport(clazz, exportEntityMap);
+        String[] head = new String[fields.size()];
+        for (int m = 0; m < fields.size(); m++) {
+            head[m] = fields.get(m).getZh_name();
+        }
+        contents.add(head);
+        String[] content;
+        for (int i = 0; i < exchangedList.size(); i++) {
+            Employee exchanged = (Employee) exchangedList.get(i);
+            content = new String[fields.size()];
+            for (int k = 0; k < fields.size(); k++) {
+                FieldInfo fieldInfo = fields.get(k);
+                Method method = exchanged.getClass().getMethod("get" + StringUtils.capitalize(fieldInfo.getName()));
+                content[k] = (String)method.invoke(exchanged);
+            }
+            contents.add(content);
+        }
+        String fileName = Excel.simpleExportExcel(contents);
+        getResponse().sendRedirect("download.do?fileName=" + fileName);
         return null;
     }
 

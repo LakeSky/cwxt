@@ -70,8 +70,8 @@ public class Tester {
         byte[] encrypt = AES.encrypt("320584195810090012", ApplicationConstant.encryptKey);
         System.out.println(AES.parseByte2HexStr(encrypt));
 
-        byte[] decrypt = AES.parseHexStr2Byte("EADC5E6C04770A6AB1F6960E5D3B55D3FE58658BEFB29830E1F93B75E3A26B6C");
-        String str = new String(AES.decrypt(decrypt, ApplicationConstant.encryptKey));
+//        byte[] decrypt = AES.parseHexStr2Byte("EADC5E6C04770A6AB1F6960E5D3B55D3FE58658BEFB29830E1F93B75E3A26B6C");
+        String str = new String(AES.decrypt(encrypt, ApplicationConstant.encryptKey));
         System.out.println(str);
     }
 }

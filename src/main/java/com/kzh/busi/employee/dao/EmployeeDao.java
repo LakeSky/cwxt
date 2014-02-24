@@ -252,7 +252,7 @@ public class EmployeeDao extends BaseDao {
         List<String[]> contents = new ArrayList<String[]>();
         for (int j = 0; j < list.size(); j++) {
             String[] listStrs = list.get(j);
-            Employee employee = obtainEmployByName(employyees, listStrs[0].trim());
+            Employee employee = obtainEmployByName(employyees, listStrs[0] == null ? "" : listStrs[0].trim());
             String[] result = new String[listStrs.length + 2];
             result[0] = listStrs[0];
             for (int i = 1; i < listStrs.length; i++) {
