@@ -11,6 +11,7 @@
     <title></title>
 </head>
 <body>
-${classpath}
+${classpath}<br/>
+${decryptStr}
 </body>
 </html>

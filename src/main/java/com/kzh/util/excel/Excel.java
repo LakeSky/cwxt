@@ -110,9 +110,14 @@ public class Excel {
         }
         for (; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
-            String[] strs = new String[row.getLastCellNum() + 1];
-            for (int j = 0; j <= row.getLastCellNum(); j++) {
-                strs[j] = row.getCell(j) == null ? "" : row.getCell(j).toString();
+            String[] strs;
+            if (row == null) {
+                strs = new String[sheet.getRow(i + 1).getLastCellNum() + 1];
+            } else {
+                strs = new String[row.getLastCellNum() + 1];
+                for (int j = 0; j <= row.getLastCellNum(); j++) {
+                    strs[j] = row.getCell(j) == null ? "" : row.getCell(j).toString();
+                }
             }
             list.add(strs);
         }

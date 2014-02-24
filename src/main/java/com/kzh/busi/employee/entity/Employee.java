@@ -28,7 +28,7 @@ public class Employee {
     private String identity_card_id;
     @QField(name = "银行卡号", type = "text", actions = "show,edit")
     private String bank_card_id;
-    @QField(name = "编制", type = "dict", actions = "show,query,edit", dictType = "dynamic",
+    @QField(name = "性质", type = "dict", actions = "show,query,edit", dictType = "dynamic",
             dictValues = {"select distinct post,post from Employee"})
     private String post;
     @QField(name = "工作状态", type = "dict", actions = "show,edit,query", dictValues = {"在职", "在职", "退休", "退休"})

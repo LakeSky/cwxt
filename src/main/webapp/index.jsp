@@ -2,9 +2,13 @@
 <html>
 <%@ include file="component/head.jsp" %>
 <body class="easyui-layout">
-<div data-options="region:'north'" style="height:50px">
+<div data-options="region:'north'" style="height:70px">
     <%--<c:url value="/j_spring_security_logout" var="logoutUrl"/>--%>
     <div style="font-size: 30px;font-weight: bold; color: darkorange">人员信息管理系统</div>
+    <div style="text-align: right;margin-right: 100px;">
+        <%--<img src='<%=basePath%>/images/favor.ico'/>--%>
+        欢迎小燕子
+    </div>
     <div style="text-align: right"><a href="${pageContext.request.contextPath}/j_spring_security_logout">注销</a></div>
 </div>
 <%--<div data-options="region:'south',split:true" style="height:50px;"></div>--%>
