@@ -3,12 +3,10 @@ package com.kzh.busi.employee.entity;
 import com.kzh.generate.auto.QField;
 import com.kzh.system.ApplicationConstant;
 import com.kzh.util.encrypt.AES;
-import com.kzh.util.encrypt.AESCoder;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table
