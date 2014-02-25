@@ -1,5 +1,6 @@
 package com.kzh;
 
+import com.kzh.busi.employee.entity.Employee;
 import com.kzh.system.ApplicationConstant;
 import com.kzh.util.encrypt.AES;
 import net.sf.json.JSONArray;
@@ -10,6 +11,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import javax.persistence.Id;
+import java.lang.annotation.Annotation;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,5 +76,11 @@ public class Tester {
 //        byte[] decrypt = AES.parseHexStr2Byte("EADC5E6C04770A6AB1F6960E5D3B55D3FE58658BEFB29830E1F93B75E3A26B6C");
         String str = new String(AES.decrypt(encrypt, ApplicationConstant.encryptKey));
         System.out.println(str);
+    }
+
+    @Test
+    public void testQFieldUtil() {
+        Annotation annotation = Employee.class.getAnnotation(Id.class);
+        System.out.println(annotation.toString());
     }
 }
