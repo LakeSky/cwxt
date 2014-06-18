@@ -55,6 +55,15 @@
     </div>
 </div>
 <script type="text/javascript">
+    $(document).ready(function () {
+        intervalConnect();
+    });
+    //如果用户没有关闭该页面就，则定时发送请求，维护连接
+    function intervalConnect() {
+        //$.get("component/connect.html?ran=" + Math.random());
+        $.get("sustain.do?ran=" + Math.random());
+        setTimeout('intervalConnect()', 1000 * 1 * 60);
+    }
     function login() {
         var url = "${pageContext.request.contextPath}/j_spring_security_check";
         var username = $("input[name='j_username']").val();
