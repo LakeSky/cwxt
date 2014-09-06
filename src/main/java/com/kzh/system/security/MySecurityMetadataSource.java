@@ -4,7 +4,6 @@ import com.kzh.system.security.dao.ResourceDao;
 import com.kzh.system.security.dao.RoleDao;
 import com.kzh.system.security.entity.Resource;
 import com.kzh.system.security.entity.Role;
-import org.hibernate.internal.util.collections.ConcurrentReferenceHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
